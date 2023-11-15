@@ -2,9 +2,14 @@ import {
   BLOCKFROST_API_KEY,
   BLOCKFROST_URL,
   CONFIRMS_WAIT,
-  lucid,
+  emulator,
+  lucid_emulator,
+  lucid_testnet,
+  USE_EMULATOR,
+  USE_TESTNET,
 } from "./config.ts";
-import { UTxO } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { Emulator, Lucid, UTxO } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { OurEmulator } from "./emulator_provider.ts";
 import {
   decode,
   encode,
@@ -15,12 +20,22 @@ async function writeStringWithoutNewline(s: string) {
   await Deno.stdout.write(text);
 }
 
+export function isEmulator(l: Lucid) {
+  return l.provider instanceof OurEmulator;
+}
+
 export function awaitTxConfirms(
+  lucid: Lucid,
   txHash: string,
   confirms = CONFIRMS_WAIT,
   checkInterval = 3000,
 ): Promise<boolean> {
   return new Promise((res) => {
+    if (isEmulator(lucid)) {
+      emulator.awaitBlock(confirms);
+      return res(true);
+    }
+
     writeStringWithoutNewline(`Waiting for ${confirms} tx confirmations...`);
     const confirmation = setInterval(async () => {
       const isConfirmed = await fetch(`${BLOCKFROST_URL}/txs/${txHash}`, {
@@ -47,13 +62,15 @@ export function filterUTXOsByTxHash(utxos: UTxO[], txhash: string) {
   return utxos.filter((x) => txhash == x.txHash);
 }
 
-export async function getWalletBalanceLovelace() {
+export async function getWalletBalanceLovelace(lucid: Lucid) {
   const utxos = await lucid?.wallet.getUtxos()!;
   return utxos.reduce((sum, utxo) => sum + utxo.assets.lovelace, 0n);
 }
 
-export function cardanoscanLink(txHash: string) {
-  return "https://preview.cardanoscan.io/transaction/" + txHash;
+export function cardanoscanLink(txHash: string, lucid: Lucid) {
+  if (isEmulator(lucid)) return "";
+  return " (check details at https://preview.cardanoscan.io/transaction/" +
+    txHash + ")";
 }
 
 export function encodeBase64(str: string): string {
@@ -63,4 +80,75 @@ export function encodeBase64(str: string): string {
 export function decodeBase64(str: string): string {
   const textDecoder = new TextDecoder();
   return textDecoder.decode(decode(str));
+}
+
+export async function runner(play: (lucid: Lucid) => Promise<boolean>) {
+  let tests_passed_emulator = true;
+  if (USE_EMULATOR) {
+    try {
+      console.log("Running on emulator...");
+      tests_passed_emulator = await play(lucid_emulator);
+    } catch (e) {
+      console.log(e);
+      console.log("An error happened while running your code in the emulator.");
+      tests_passed_emulator = false;
+    }
+  } else {
+    console.log("Emulator is disabled, skipping...");
+  }
+  if (tests_passed_emulator) {
+    if (!USE_TESTNET) {
+      console.log("Testnet is disabled, skipping...");
+    } else if (lucid_testnet == undefined) {
+      console.log(
+        "Testnet is not configured, finish your configuration according to the README",
+      );
+    } else {
+      console.log(
+        "Running the task on testnet now, this will take some time...",
+      );
+      await play(lucid_testnet);
+    }
+  } else {
+    console.log(
+      "Tests did not pass on emulator, skipping the testnet. To force testnet, set USE_EMULATOR in config to false.",
+    );
+  }
+}
+
+export function filter_undefined(input_list: (string | undefined)[]): string[] {
+  return input_list.filter((item): item is string => !!item);
+}
+
+export async function sleep(milliseconds: bigint): Promise<void> {
+  const oneDayInMilliseconds = BigInt(24 * 60 * 60 * 1000);
+
+  if (milliseconds >= oneDayInMilliseconds) {
+    await new Promise((resolve) =>
+      setTimeout(resolve, Number(oneDayInMilliseconds))
+    );
+    await sleep(milliseconds - oneDayInMilliseconds);
+  } else {
+    await new Promise((resolve) => setTimeout(resolve, Number(milliseconds)));
+  }
+}
+
+export function getCurrentTime(lucid: Lucid) {
+  if (lucid.provider instanceof Emulator) {
+    return lucid.provider.now();
+  }
+  const current = new Date();
+  return current.getTime();
+}
+
+export function second() {
+  return 1000;
+}
+
+export function minute() {
+  return 60 * second();
+}
+
+export function hour() {
+  return 60 * minute();
 }

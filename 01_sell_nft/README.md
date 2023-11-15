@@ -26,10 +26,10 @@ explore:
 
 ## Off-chain code
 
-You only have to interact with the `play.ts` file. Similar to the previous
+You only have to make changes in the `player.ts` file. Similar to the previous
 level, you can create it by copying the
-[play_template.ts](./scripts/play_template.ts). Inside the file, the relevant
-parts are clearly commented, starting with
+[player_template.ts](./scripts/player_template.ts). Inside the file, the
+relevant parts are clearly commented, starting with
 `================ YOUR CODE STARTS HERE` and ending with
 `================ YOUR CODE ENDS HERE`.
 
@@ -38,5 +38,5 @@ comments. The code that is already there buys a single NFT from the seller — i
 doesn't pass all the tests because it buys only one of the two required NFTs.
 Try to pass all the tests by modifying it.
 
-As before, you can run the code with:
-`deno run --allow-net --allow-read ./scripts/play.ts`
+As before, you can run the code and tests with:
+`deno run --allow-net --allow-read ./scripts/run.ts`

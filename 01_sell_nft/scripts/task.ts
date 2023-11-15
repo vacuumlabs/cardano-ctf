@@ -11,11 +11,15 @@ import {
   SpendingValidator,
   UTxO,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+
+import { UNIQUE_ID } from "../../common/offchain/config.ts";
 import {
-  brightGreen,
-  brightRed,
-} from "https://deno.land/std@0.206.0/fmt/colors.ts";
-import { lucid, UNIQUE_ID } from "../../common/offchain/config.ts";
+  failTest,
+  failTests,
+  passAllTests,
+  passTest,
+} from "../../common/offchain/test_utils.ts";
+
 import {
   awaitTxConfirms,
   cardanoscanLink,
@@ -46,7 +50,7 @@ type GameData = {
   originalBalance: bigint;
 };
 
-function readValidators(_lucid: Lucid): Validators {
+function readValidators(lucid: Lucid): Validators {
   const mintNFT = blueprint.validators.find(
     (v) => v.title === "nft.unique_nft",
   );
@@ -119,7 +123,7 @@ function applyParamsToNFT(
   };
 }
 
-export async function setup() {
+export async function setup(lucid: Lucid) {
   console.log(`=== SETUP IN PROGRESS ===`);
 
   // Compile and setup the validators
@@ -132,7 +136,7 @@ export async function setup() {
   const tokenName2 = `${UNIQUE_ID} -- NFT2`;
   const utxosAtBeginning = await lucid?.wallet.getUtxos()!;
   const nftOriginUtxo = utxosAtBeginning[0];
-  const originalBalance = await getWalletBalanceLovelace();
+  const originalBalance = await getWalletBalanceLovelace(lucid);
   console.log(`Your wallet's balance at the beginning is ${originalBalance}`);
 
   const outputReference = {
@@ -187,9 +191,9 @@ export async function setup() {
   console.log(
     "Setup transaction was submitted to testnet, awaiting confirmations!",
   );
-  await awaitTxConfirms(txHash);
+  await awaitTxConfirms(lucid, txHash);
   console.log(`NFTs were minted, txHash: ${txHash}
-      (check details at ${cardanoscanLink(txHash)})`);
+      ${cardanoscanLink(txHash, lucid)}`);
 
   const scriptUtxos = filterUTXOsByTxHash(
     await lucid.utxosAt(validators!.sellingAddress),
@@ -208,12 +212,12 @@ export async function setup() {
   };
 }
 
-export async function test(gameData: GameData) {
+export async function test(gameData: GameData, lucid: Lucid): Promise<boolean> {
   let passed = true;
   console.log("================TESTS==================");
 
   const usersUTxOs = await lucid.utxosAt(await lucid.wallet.address());
-  const endBalance = await getWalletBalanceLovelace();
+  const endBalance = await getWalletBalanceLovelace(lucid);
 
   console.log(`Your wallet's balance at the end is ${endBalance}`);
 
@@ -225,9 +229,9 @@ export async function test(gameData: GameData) {
     Object.prototype.hasOwnProperty.call(utxo.assets, asset1)
   );
   if (nft1InUsersWallet) {
-    console.log(brightGreen(`TEST 1 PASSED - you bought NFT ${asset1}`));
+    passTest(`TEST 1 PASSED - you bought NFT ${asset1}`, lucid);
   } else {
-    console.log(brightRed(`TEST 1 FAILED - you did not buy NFT ${asset1}`));
+    failTest(`TEST 1 FAILED - you did not buy NFT ${asset1}`);
     passed = false;
   }
 
@@ -236,9 +240,9 @@ export async function test(gameData: GameData) {
     Object.prototype.hasOwnProperty.call(utxo.assets, asset2)
   );
   if (nft2InUsersWallet) {
-    console.log(brightGreen(`TEST 2 PASSED - you bought NFT ${asset2}`));
+    passTest(`TEST 2 PASSED - you bought NFT ${asset2}`, lucid);
   } else {
-    console.log(brightRed(`TEST 2 FAILED - you did not buy NFT ${asset2}`));
+    failTest(`TEST 2 FAILED - you did not buy NFT ${asset2}`);
     passed = false;
   }
 
@@ -256,25 +260,29 @@ export async function test(gameData: GameData) {
 
   const spentFunds = endBalance - gameData.originalBalance;
   if (spentFunds < datum1.price + datum2.price) {
-    console.log(
-      brightGreen(`TEST 3 PASSED - you spent less than the price of both NFTs`),
+    passTest(
+      `TEST 3 PASSED - you spent less than the price of both NFTs`,
+      lucid,
     );
   } else {
-    console.log(brightRed(`TEST 3 FAILED - you spent too much ADA!`));
+    failTest(`TEST 3 FAILED - you spent too much ADA!`);
     passed = false;
   }
 
   if (passed) {
-    console.log(brightGreen(
-      "\nCongratulations on the successful completion of the Level 1: Sell NFT",
-    ));
     const encoded_blog_url =
       "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tdnVsbmVyYWJpbGl0aWVzLTEtZG91YmxlLXNhdGlzZmFjdGlvbi0yMTlmMWJjOTY2NWU=";
-    console.log(
-      `You can read more about the underlying vulnerability in this blog post: ${
-        decodeBase64(encoded_blog_url)
-      }`,
+
+    passAllTests(
+      "\nCongratulations on the successful completion of the Level 01: Sell NFT\n" +
+        `You can read more about the underlying vulnerability in this blog post: ${
+          decodeBase64(encoded_blog_url)
+        }` + "\nGood luck with the next level.",
+      lucid,
     );
-    console.log("Good luck with the next level.");
+    return true;
+  } else {
+    failTests();
+    return false;
   }
 }

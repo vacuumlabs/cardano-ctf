@@ -21,7 +21,7 @@ Each challenge consists of 2 files that you should interact with:
 - The validator, located in
   [validators/hello_world.ak](./validators/hello_world.ak)
 - The off-chain code, located in
-  [scripts/play_template.ts](./scripts/play_template.ts)
+  [scripts/player_template.ts](./scripts/player_template.ts)
 
 The validator code is read only — you are not supposed to modify it, you are
 supposed to exploit it. The off-chain is divided into 3 parts:
@@ -35,9 +35,9 @@ supposed to exploit it. The off-chain is divided into 3 parts:
    interaction which can get you going faster but is not sufficient just yet.
    This code interacts with the smart contract in some way, but does not exploit
    the vulnerability. This part is located in the
-   [play_template.ts](./scripts/play_template.ts) file. To play, we recommend
-   keeping the template as is and **copying it** into a file called `play.ts`
-   which you can then freely edit.
+   [player_template.ts](./scripts/player_template.ts) file. To play, we
+   recommend keeping the template as is and **copying it** into a file called
+   `player.ts` which you can then freely edit.
 3. Tests — the tests verify whether you correctly achieved your goal. Tests are
    done by calling the `test` function from the [task.ts](./scripts/task.ts). Do
    not modify this part.
@@ -49,16 +49,25 @@ supposed to exploit it. The off-chain is divided into 3 parts:
    love to hear about that!
 
 The above parts communicate through a structure called `gameData`. It is created
-during the setup and it contains everything you need for solving the challenges
+during the setup, and it contains everything you need for solving the challenges
 and everything that the tests require. You should not modify it unless
 specifically instructed to.
 
 To start, you can compile the validators by running `aiken build --keep-traces`
 in the root of the task. Then you can run the sample code by running
-`deno run --allow-net --allow-read ./scripts/play.ts` (did you create the
-file?).
+`deno run --allow-net --allow-read ./scripts/run.ts`. Run is our wrapper that
+calls the function `play` from `player.ts` (if you did not copy
+`player_template.ts`, it will not work).
+
+The wrapper first tests your code in the Lucid emulator. If all the tests inside
+the emulator pass, the code is tested one more time against the testnet. The
+emulator provides early feedback so that you do not need to wait for all the
+transactions being validated and accepted on the actual blockchain. Once you
+solve the task, though, only the testnet offers a real-world environment and so
+it is really important to pass there as well. This default behavior can be
+changed in the `common/offchaion/config.ts`.
 
 The goal of each task is to pass all the tests by editing the editable parts of
-off-chain code. You will get a congrats message once you get there.
+off-chain code. You will get a _green_ congrats message once you get there.
 
 With all that said, good luck and have fun!

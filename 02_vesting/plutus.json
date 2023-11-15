@@ -1,0 +1,67 @@
+{
+  "preamble": {
+    "title": "ctf/vesting",
+    "description": "Aiken contracts for project 'ctf/vesting'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "vesting.vesting",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/vesting~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "59012a01000032323232323232322223253330073232323232323232323232323232323253330173370e900100089919299980c99191980080080311299980f8008a5013232533301e3371e00400a29444cc010010004c088008dd718100009bae30013017016132323232533301d3370e9001000899b89003375a604260360042940c06c004c008c064c00cc064020dd69800980c00b9180f0008a502301d301e001301500d14a0602a0186eb0c064004c064008c05c004c05c004c058004c054004c050004c04c004c048004c044004c02400cc038004c038008c030004c014008526163253330073370e9000000899191919299980718080010a4c2c6eb8c038004c038008dd6980600098028020b1802801918029baa001230033754002ae6955ceaab9e5573eae855d101",
+      "hash": "c627a70aa4ba103d9982ccaf0c4f5eae46a674196344dba6c8303411"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "vesting/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "lock_until",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "beneficiary",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

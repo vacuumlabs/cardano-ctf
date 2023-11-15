@@ -1,7 +1,7 @@
 *.addr
 *.sk
 common/offchain/config.ts
-**/scripts/play.ts
+**/scripts/player.ts
 
 # Aiken
 **/artifacts/

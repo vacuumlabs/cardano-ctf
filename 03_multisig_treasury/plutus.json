@@ -1,0 +1,248 @@
+{
+  "preamble": {
+    "title": "ctf/multisig_treasury",
+    "description": "Aiken contracts for project 'ctf/multisig_treasury'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "multisig.multisig",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/types~1MultisigDatum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/types~1MultisigRedeemer"
+        }
+      },
+      "compiledCode": "5905540100003232323232323232322223232323232533300b32323232323232323232323232323232323232323232323232323253330263370e90000018a99981319b870054800854ccc098cdc38022400026644646600200200644a66605a00229404c8c94ccc0b0c01400852889980200200098188011bae302f00137586002604804646600601a0022c2c264a66604e66e1d20003026001132323232533302b3370e900218150008991919299981719b8700d4800854ccc0b8cdc3806240042a66605c66e1cdd6980998160011bad3013302c02b1533302e3375e60206058004602060580562a66605c66ebcc014c0b0008c014c0b00ac54ccc0b8c8c8cdc418009bac300b302e02d300137586016605c008600200244a66606600229000099b8048008cc008008c0d80044ccccc88888c8c8c8c94ccc0dc01054ccc0dc00c54ccc0dc00840045280a5014a06601000c4a66606e6602601000229444cc04c014004cc01c0148cc048014004cc0180148cc044014004cc01400c8cdc399199800800802a4000444a66607400420022666006006607a0046644a66607266e3c0080184cdc0000a400420026eb8c0f0008005200222323300100100322533303500114a226464a666068600a0042660080080022940c0e4008dd7181b8009bac3009302c02b3758601260580046eb0c014c0b00ac0505280a5014a029405280a5030250013031001302900116300130280022302f30303030001302d0013025001163300a01323375e0106018604a0024605660586058605800244646600200200644a66605600229404c8c94ccc0a8cdc78010028a51133004004001302f002375c605a002604403e6600401e00666002646600200202444a66604c002297ae01330273005302130280013300200230290010022232333001001003480008894ccc0a000840044ccc00c00cc0ac008cc894ccc09ccdd780318061812801099b80001480084004c0a8008004c010c074c004c0740088c090c0940054ccc074cdc3a4004603801e2646464a66604066e1d2000301f00113025301e001163300300f23375e004600a603c0026046002603601e2c44646600200200644a666046002298103d87a8000132325333022300500213374a90001981300125eb804cc010010004c09c008c0940048c084004dd6180f800980f800980f000980e800980e000980d800980d0011bac3018001301800130170023758602a002601a006602600260260046022002601200c2930b19299980599b874800000454ccc038c02401c526161533300b3370e90010008a99980718048038a4c2c2c601200c600200c464a66601466e1d200000113232323232323232533301530180021323232498cc03400c8dd70009980600211bae0013253330133370e9000000899191919299980d180e8010991924c64a66603266e1d200000113232533301e3021002132498c94ccc070cdc3a400000226464a666042604800426493180c0008b1811000980d0010a99980e19b87480080044c8c8c8c8c8c94ccc094c0a000852616375a604c002604c0046eb4c090004c090008dd69811000980d0010b180d0008b180f800980b8018a99980c99b874800800454ccc070c05c00c52616163017002301100316301b001301b00230190013011006163011005163758602c002602c0046eb0c050004c050008c048004c048008dd6980800098040010b18040009119198008008019129998070008a4c26466006006602400460066020002464a66601066e1d200000113232533300d3010002149858dd7180700098030010a99980419b87480080044c8c94ccc034c04000852616375c601c002600c0042c600c0024600a6ea80048c00cdd5000ab9a5573aaae7955cfaba05742ae89",
+      "hash": "533c284a2d8c33cac1a75fefebab468ed0ba65a9d21a5beff709e294"
+    },
+    {
+      "title": "treasury.treasury",
+      "datum": {
+        "title": "treasury_input_datum",
+        "schema": {
+          "$ref": "#/definitions/types~1TreasuryDatum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "parameters": [
+        {
+          "title": "multisigHash",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        }
+      ],
+      "compiledCode": "5905fc010000323232323232323232232222323232533300b323232323232323232323232323232533301a3370e9000180c8008991919299980e99b8748000c0700044c8c8c8c94ccc084cdc3a40086040002264646464a66604a66e1d20043024001132323232323232533302c3370e6002646600200203a44a666062002297ae01330323017302c30330013300200230340014801054ccc0b0cdc3980080ca40042a6660580042a66605866646444a66606066e1cc00c008c00c0044c8cc00400400c894ccc0d400452889919299981a191980080080311299981c8008a501323253330383371e00400c29444cc010010004c0f4008dd7181d8008998020020008a503039002375c606e0022c600200244a66606200229000099b8048008cc008008c0d0004dd6180a98150139bac3031303230323032302a00a13322323300100101c22533303300114a026464a666064a66606466ebcc078c0c00080184cdc480298051bab301b303000214a029444cc010010004c0dc008c0d4004c054c0a8028dd6980c18150050a5014a0294052811919980080080124000444a66606400420022666006006606a0046644a6660626464a66606666e1d20020011324a260620042940c0c4004c074c0bcc074c0bc0084cdc0000a400420026068004002a66605466e25208092f4010011533302a337126eb4c058c0a00100044c94ccc0accdd7980a1814813180a1814802899b89375a602e605204c66e00dd6980b98148028008a50375a602c6050010294052818009bab3012302700b232332232533302d3370e9001000880109bad3032302b003302b00232533302b3370e90010008a60103d87a8000132323300100100222533303100114c103d87a800013232323253330323371e9110000213374a90001981b1ba80014bd700998030030019bad3033003375c6062004606a00460660026eacc0c0c0a4008c0a40052000323300100100222533302e00114c0103d87a8000132323232533302f3371e9110000213374a9000198199ba60014bd700998030030019bab3030003375c605c00460640046060002603c002605600260460022c600a604400c664464a66604c66e1d200000113232323232323232533303130340021323232498cc0a000c8dd70009981380211bae00132533302f3370e9000000899191919299981b181c8010991924c64a66606a66e1d200000113232533303a303d002132498c94ccc0e0cdc3a400000226464a66607a608000426493180b8008b181f000981b0010a99981c19b87480080044c8c8c8c8c8c94ccc104c11000852616375a608400260840046eb4c100004c100008dd6981f000981b0010b181b0008b181d80098198018a99981a99b874800800454ccc0e0c0cc00c52616163033002301000316303700130370023035001302d00616302d005163758606400260640046eb0c0c0004c0c0008c0b8004c0b8008dd6981600098120010b1812000919299981299b87480000044c8c94ccc0a8c0b400852616375c605600260460042a66604a66e1d200200113232533302a302d002149858dd7181580098118010b18118008009813800980f8008b1800980f1804980f00291812981318130009811800980d8008b19803804919baf0053009301b00130200013018001163300400923232533301c3370e9001000899b8f018375c604260340042940c068004c018c060c018c060c00cc060004c010c058c004c0580088c074c0780054ccc058cdc3a4004602a0102646464a66603266e1d200030180011301e3017001163300300823375e004600a602e002603800260280102c44646600200200644a6660380022980103d87a800013232533301b300500213374a90001980f80125eb804cc010010004c080008c0780048c068004dd6180c000980c000980b8011bac3015001300d0033013001301300230110013009004149858c0040148c94ccc02ccdc3a4000002264646464a666024602a004264931980380091bae001163758602600260260046eb4c044004c02400858c02400488c8cc00400400c894ccc03c00452613233003003301300230033011001375c0024600a6ea80048c00cdd5000ab9a5573aaae7955cfaba05742ae89",
+      "hash": "11632891b99205bb60c97ea26bb8be7e090477adb1714a6a62881d62"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "List$ByteArray": {
+      "dataType": "list",
+      "items": {
+        "$ref": "#/definitions/ByteArray"
+      }
+    },
+    "Option$aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Optional",
+      "anyOf": [
+        {
+          "title": "Some",
+          "description": "An optional value.",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "None",
+          "description": "Nothing.",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "aiken/transaction/credential/Address": {
+      "title": "Address",
+      "description": "A Cardano `Address` typically holding one or two credential references.\n\n Note that legacy bootstrap addresses (a.k.a. 'Byron addresses') are\n completely excluded from Plutus contexts. Thus, from an on-chain\n perspective only exists addresses of type 00, 01, ..., 07 as detailed\n in [CIP-0019 :: Shelley Addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019/#shelley-addresses).",
+      "anyOf": [
+        {
+          "title": "Address",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "payment_credential",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            },
+            {
+              "title": "stake_credential",
+              "$ref": "#/definitions/Option$aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Credential": {
+      "title": "Credential",
+      "description": "A general structure for representing an on-chain `Credential`.\n\n Credentials are always one of two kinds: a direct public/private key\n pair, or a script (native or Plutus).",
+      "anyOf": [
+        {
+          "title": "VerificationKeyCredential",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        },
+        {
+          "title": "ScriptCredential",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Referenced",
+      "description": "Represent a type of object that can be represented either inline (by hash)\n or via a reference (i.e. a pointer to an on-chain location).\n\n This is mainly use for capturing pointers to a stake credential\n registration certificate in the case of so-called pointer addresses.",
+      "anyOf": [
+        {
+          "title": "Inline",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "Pointer",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "title": "slot_number",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "transaction_index",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "certificate_index",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "types/MultisigDatum": {
+      "title": "MultisigDatum",
+      "anyOf": [
+        {
+          "title": "MultisigDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "release_value",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "beneficiary",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Address"
+            },
+            {
+              "title": "required_signers",
+              "$ref": "#/definitions/List$ByteArray"
+            },
+            {
+              "title": "signed_users",
+              "$ref": "#/definitions/List$ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "types/MultisigRedeemer": {
+      "title": "MultisigRedeemer",
+      "anyOf": [
+        {
+          "title": "Use",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "Sign",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "types/TreasuryDatum": {
+      "title": "TreasuryDatum",
+      "anyOf": [
+        {
+          "title": "TreasuryDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "value",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "owners",
+              "$ref": "#/definitions/List$ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -6,17 +6,18 @@ import {
   UTxO,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
-  brightGreen,
-  brightRed,
-} from "https://deno.land/std@0.206.0/fmt/colors.ts";
-import { lucid } from "../../common/offchain/config.ts";
-import {
   awaitTxConfirms,
   cardanoscanLink,
   filterUTXOsByTxHash,
   getWalletBalanceLovelace,
 } from "../../common/offchain/utils.ts";
 import blueprint from "../plutus.json" assert { type: "json" };
+import {
+  failTest,
+  failTests,
+  passAllTests,
+  passTest,
+} from "../../common/offchain/test_utils.ts";
 
 type GameData = {
   scriptValidator: SpendingValidator;
@@ -24,7 +25,7 @@ type GameData = {
   originalBalance: bigint;
 };
 
-function readValidator(_lucid: Lucid): SpendingValidator {
+function readValidator(): SpendingValidator {
   const validator = blueprint.validators.find(
     (v) => v.title === "hello_world.hello_world",
   );
@@ -42,6 +43,7 @@ function readValidator(_lucid: Lucid): SpendingValidator {
 export async function lock(
   lovelace: bigint,
   { into }: { into: SpendingValidator },
+  lucid: Lucid,
 ): Promise<TxHash> {
   const contractAddress = lucid.utils.validatorToAddress(into);
 
@@ -55,11 +57,11 @@ export async function lock(
   return signedTx.submit();
 }
 
-export async function setup() {
+export async function setup(lucid: Lucid) {
   console.log(`=== SETUP IN PROGRESS ===`);
 
-  const originalBalance = await getWalletBalanceLovelace();
-  const validator = readValidator(lucid);
+  const originalBalance = await getWalletBalanceLovelace(lucid);
+  const validator = readValidator();
 
   const _publicKeyHash = lucid.utils.getAddressDetails(
     await lucid.wallet.address(),
@@ -67,13 +69,13 @@ export async function setup() {
 
   console.log(`Creating an UTxO at the smart contract script address...`);
 
-  const txHash = await lock(10000000n, { into: validator });
+  const txHash = await lock(10000000n, { into: validator }, lucid);
 
-  await awaitTxConfirms(txHash);
+  await awaitTxConfirms(lucid, txHash);
 
   console.log(`10 ADA locked into the contract at:
           Tx ID: ${txHash}
-            (check details at ${cardanoscanLink(txHash)})
+            ${cardanoscanLink(txHash, lucid)}
       `);
 
   const contractAddress = lucid.utils.validatorToAddress(validator);
@@ -88,20 +90,24 @@ export async function setup() {
   };
 }
 
-export async function test(gameData: GameData) {
+export async function test(gameData: GameData, lucid: Lucid): Promise<boolean> {
   let passed = true;
   console.log("================TESTS==================");
-  const endBalance = await getWalletBalanceLovelace();
+  const endBalance = await getWalletBalanceLovelace(lucid);
   if (gameData.originalBalance - endBalance > 4000000n) {
-    console.log(brightRed("TEST 1 FAILED - you spent too much ADA"));
+    failTest("TEST 1 FAILED - you spent too much ADA");
     passed = false;
   } else {
-    console.log(brightGreen("TEST 1 PASSED"));
+    passTest("TEST 1 PASSED", lucid);
   }
   if (passed) {
-    console.log(brightGreen(
-      "\nCongratulations on the successful completion of the Level 0: Hello World!",
-    ));
-    console.log("Good luck with the next level.");
+    passAllTests(
+      "\nCongratulations on the successful completion of the Level 00: Hello World!\nGood luck with the next level.",
+      lucid,
+    );
+    return true;
+  } else {
+    failTests();
+    return false;
   }
 }

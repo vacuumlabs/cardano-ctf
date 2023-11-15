@@ -2,11 +2,17 @@
 
 Welcome to the Cardano Capture the Flag (CTF) challenge by the
 [Vacuumlabs Auditing](https://vacuumlabs.com/blockchain/smart-contract-auditing/)
-team! It is a game where Cardano developers and enthusiasts can try to exploit
+team!
+
+It is a game where Cardano developers and enthusiasts can try to exploit
 purposefully vulnerable smart contracts and learn about the most common security
 issues and how to prevent them. In a way, you can try the job of auditors on
-some common Cardano vulnerabilities. We believe this will provide the community
-with educational materials needed to write more secure smart contracts.
+some common Cardano vulnerabilities.
+
+We believe this will provide the community with educational materials needed to
+write more secure smart contracts.
+
+## How it works
 
 Each task has its own folder. It consists of three main parts:
 
@@ -20,7 +26,9 @@ Each task has its own folder. It consists of three main parts:
   - Sample interaction with the deployed contract. This is the part you should
     modify and / or extend to exploit a vulnerability.
   - Tests that verify if you successfully exploited the vulnerability or not.
-- A README file containing task-specific instructions.
+- A README file containing task-specific instructions. The first sample
+  [hello_world](./00_hello_world/README.md#how-to-solve-the-challenges) task
+  contains a bit more info on how exactly to play.
 
 The tasks are more or less of an increasing difficulty. The suggested path is to
 go from a simple [hello_world](./00_hello_world/) task up. The tasks' README's
@@ -29,33 +37,49 @@ levels.
 
 ## Setup
 
-Before you start playing, there are few tools you have to setup:
+To be able to run the first task, just 3 steps of setup are needed:
 
 1. Install
    [Deno](https://docs.deno.com/runtime/manual/getting_started/installation).
 2. Install [Aiken](https://aiken-lang.org/installation-instructions).
 3. Copy the template config file in `common/offchain/config_temp.ts` to
    `common/offchain/config.ts`.
-   - Generate a private key and address. We prepared a private key generation
-     code for you, you can run it by:
 
-     ```
-     deno run --allow-net --allow-write ./common/offchain/generate_private_key.ts
-     ```
+That's it and you can now play in the local Lucid emulator! The emulator is
+great for testing smart contracts fast.
 
-     Put your private key into the `PRIVATE_KEY` constant located in the
-     `common/offchain/config.ts`.
+You can now try the first [hello_world](./00_hello_world/) task (read its README
+carefully) and get to the _yellow_ test results.
 
-     DO NOT REUSE A PRIVATE KEY THAT YOU USE FOR MAINNET! Generate a new one
-     instead!
-   - Get Blockfrost API key by registering at https://blockfrost.io/ . Put this
-     API key into the `BLOCKFROST_API_KEY` constant in the
-     `common/offchain/config.ts`.
-4. Request tADA into your address (see the newly created `key.addr` file) from
-   the [Cardano Faucet](https://docs.cardano.org/cardano-testnet/tools/faucet/).
-   The environment we use is **Preview Testnet**.
-5. You are good to go! To verify that everything is set up correctly, try
-   solving the very first sample task: [Hello World](./00_hello_world/).
+## Finishing the setup
+
+To get to the _green_ test results and really finish the task, it is required to
+finish it in the testnet environment. To set this up, there are a few more steps
+you need to take:
+
+1. Generate a private key and address. We prepared a private key generation code
+   for you, you can run it by:
+
+   ```
+   deno run --allow-net --allow-write ./common/offchain/generate_private_key.ts
+   ```
+
+   Put your private key into the `PRIVATE_KEY` constant located in the
+   `common/offchain/config.ts`.
+
+   DO NOT REUSE A PRIVATE KEY THAT YOU USE FOR MAINNET! Generate a new one
+   instead!
+2. Get Blockfrost API key by registering at https://blockfrost.io/ . Put this
+   API key into the `BLOCKFROST_API_KEY` constant in the
+   `common/offchain/config.ts`.
+3. You need some starting ADA in your wallet so you can interact with the
+   Cardano testnet. Request tADA into your address (see the newly created
+   `key.addr` file) from the
+   [Cardano Faucet](https://docs.cardano.org/cardano-testnet/tools/faucet/). The
+   environment we use is **Preview Testnet**.
+4. You are good to go! To verify that everything is set up correctly, try
+   solving the very first sample task: [Hello World](./00_hello_world/). You
+   should see green test results when everything is done correctly.
 
 ## Tasks
 
@@ -63,6 +87,10 @@ Before you start playing, there are few tools you have to setup:
    setup correctly.
 1. [sell_nft](./01_sell_nft/) — Try to buy two NFTs by paying less than their
    stated prices!
+2. [vesting](./02_vesting/) — Try to skip the vesting period.
+3. [multisig_treasury](./03_multisig_treasury/) — Unlock treasury without all
+   the signatures.
+4. [tipjar](./04_tipjar/) — Try to prevent others from tipping into a Tip Jar.
 
 ## Troubleshooting
 
@@ -70,12 +98,13 @@ Before you start playing, there are few tools you have to setup:
 
 There are videos in the [videos folder](./videos/). Check them out if you're
 struggling. Beware, it can contain spoilers, especially the first video that
-solves the hello_world task entirely.
+solves the _hello_world_ task entirely.
 
 ### Errors during a transaction submission
 
 Sometimes, Lucid errors out when it submits a transaction. This usually happens
-when you wait for too short between two different transactions from your wallet.
+on the real testnet when you wait for too short between two different
+transactions from your wallet.
 
 In the meantime, if you encounter this error, you can try to change the default
 value of `CONFIRMS_WAIT` in the [config](./common/offchain/config.ts) to a
@@ -83,13 +112,16 @@ higher number. This makes it wait for more confirmations before it follows up
 with the next transaction, increasing the time and making the chance of such
 errors smaller.
 
-### Long waiting time
+### Long waiting time on the testnet
 
 From our experience, the time required for a transaction validation are ever
 changing on the preview testnet. If it takes too long, try to decrease the
 default value of `CONFIRMS_WAIT` in the [config](./common/offchain/config.ts) to
 a lower number. Be careful not to change it too low, otherwise you might get
 errors during submissions.
+
+This is why we run the transactions on the Lucid emulator first. Only if they
+pass there we try to replicate it on the testnet as well.
 
 ## Feedback
 
@@ -99,6 +131,12 @@ Please, share your thoughts and feedback with us at audit@vacuumlabs.com.
 
 The smart contract code in the examples is purposefully vulnerable. DO NOT copy
 parts of the code into your project, as you may copy a vulnerability, too.
+Beware that the code may contain more than a single vulnerability.
+
+## Changelog
+
+This project is ever evolving. Please refer to the [Changelog](./CHANGELOG.md)
+to see the changes over time.
 
 ## License
 
