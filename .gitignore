@@ -1,0 +1,12 @@
+*.addr
+*.sk
+common/offchain/config.ts
+**/scripts/play.ts
+
+# Aiken
+**/artifacts/
+**/build/
+**/docs/
+
+# MacOS
+.DS_Store

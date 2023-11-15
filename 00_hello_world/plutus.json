@@ -1,0 +1,60 @@
+{
+  "preamble": {
+    "title": "ctf/hello_world",
+    "description": "Aiken contracts for project 'ctf/hello_world'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "hello_world.hello_world",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/hello_world~1Redeemer"
+        }
+      },
+      "compiledCode": "5864010000323232323232322223253330063371e6eb8c028c01400d22010a48656c6c6f204354462100149858c94ccc018cdc3a400000226464a666016601a0042930b1bae300b00130050031630063754004460086ea80055cd2ab9d5573caae7d5d0aba21",
+      "hash": "f255ff53f95e4c90e36c3fa4ae205e1d447871b356409816a6ad41e0"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "hello_world/Redeemer": {
+      "title": "Redeemer",
+      "anyOf": [
+        {
+          "title": "Redeemer",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "msg",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

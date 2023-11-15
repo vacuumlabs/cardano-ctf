@@ -1,0 +1,14 @@
+name = "ctf/hello_world"
+version = "0.0.0"
+license = "Apache-2.0"
+description = "Aiken contracts for project 'ctf/hello_world'"
+
+[repository]
+user = "ctf"
+project = "hello_world"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.6.0"
+source = "github"

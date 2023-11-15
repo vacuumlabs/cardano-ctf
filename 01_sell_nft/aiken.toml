@@ -1,0 +1,14 @@
+name = "ctf/sell_nft"
+version = "0.0.0"
+license = "Apache-2.0"
+description = "Aiken contracts for project 'ctf/sell_nft'"
+
+[repository]
+user = "ctf"
+project = "sell_nft"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.6.0"
+source = "github"
