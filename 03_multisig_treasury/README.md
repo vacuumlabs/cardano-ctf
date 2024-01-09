@@ -31,8 +31,8 @@ Note that the treasury validator is parameterized with a hash of the multisig
 validator, ensuring that only the corresponding multisig script can unlock the
 given treasury.
 
-In addition to the validators, `lib/types.ak` contains the datum, and the
-redeemer specifications for both validators. There is also a `lib/utils.ak`
+In addition to the validators, `lib/types.ak` contains the datum and the
+redeemer specifications for both validators. There is also the `lib/utils.ak`
 utils file containing some of the common parser logic to not polute the checks.
 
 ## Off-chain code

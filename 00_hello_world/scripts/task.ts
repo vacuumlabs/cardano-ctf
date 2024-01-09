@@ -19,11 +19,13 @@ import {
   passTest,
 } from "../../common/offchain/test_utils.ts";
 
-type GameData = {
+export type GameData = {
   scriptValidator: SpendingValidator;
   scriptUtxo: UTxO;
   originalBalance: bigint;
 };
+
+export type TestData = void;
 
 function readValidator(): SpendingValidator {
   const validator = blueprint.validators.find(
@@ -90,7 +92,11 @@ export async function setup(lucid: Lucid) {
   };
 }
 
-export async function test(gameData: GameData, lucid: Lucid): Promise<boolean> {
+export async function test(
+  lucid: Lucid,
+  gameData: GameData,
+  _testData: TestData,
+): Promise<boolean> {
   let passed = true;
   console.log("================TESTS==================");
   const endBalance = await getWalletBalanceLovelace(lucid);

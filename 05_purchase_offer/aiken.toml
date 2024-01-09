@@ -1,0 +1,14 @@
+name = "ctf/purchase_offer"
+version = "0.0.0"
+license = "GPL-3.0"
+description = "Aiken contracts for project 'ctf/purchase_offer'"
+
+[repository]
+user = "ctf"
+project = "purchase_offer"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.6.0"
+source = "github"

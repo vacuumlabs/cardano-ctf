@@ -20,7 +20,7 @@ import {
 } from "../../common/offchain/test_utils.ts";
 import { createVestingDatum } from "./types.ts";
 
-type GameData = {
+export type GameData = {
   vestingValidator: SpendingValidator;
   vestingAddress: string;
   vestingtUtxo: UTxO;
@@ -29,6 +29,7 @@ type GameData = {
   txHash: string;
   startTime: number;
 };
+export type TestData = void;
 
 function readValidator(): SpendingValidator {
   const validator = blueprint.validators.find(
@@ -90,7 +91,11 @@ export async function setup(lucid: Lucid) {
   };
 }
 
-export async function test(gameData: GameData, lucid: Lucid): Promise<boolean> {
+export async function test(
+  lucid: Lucid,
+  gameData: GameData,
+  _testData: TestData,
+): Promise<boolean> {
   let passed = true;
   console.log("\n================TESTS==================");
   const vestingUtxos = filterUTXOsByTxHash(

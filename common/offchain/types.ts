@@ -1,6 +1,8 @@
 import {
+  Credential as LucidCredential,
   Data,
   getAddressDetails,
+  Lucid,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 
 export const CredentialSchema = Data.Enum([
@@ -8,16 +10,17 @@ export const CredentialSchema = Data.Enum([
   Data.Object({ ScriptCredential: Data.Tuple([Data.Bytes()]) }),
 ]);
 
-export const PaymentCredentialSchema = CredentialSchema;
-
-export const StakeCredentialSchema = Data.Enum([
-  Data.Object({ Inline: CredentialSchema }),
+const PaymentCredentialSchema = CredentialSchema;
+const StakeCredentialSchema = Data.Enum([
+  Data.Object({ Inline: Data.Tuple([CredentialSchema]) }),
   Data.Object({
-    Pointer: Data.Object({
-      Slot_number: Data.Integer(),
-      Transaction_index: Data.Integer(),
-      Certificate_index: Data.Integer(),
-    }),
+    Pointer: Data.Tuple([
+      Data.Object({
+        Slot_number: Data.Integer(),
+        Transaction_index: Data.Integer(),
+        Certificate_index: Data.Integer(),
+      }),
+    ]),
   }),
 ]);
 
@@ -26,32 +29,61 @@ export const AddressSchema = Data.Object({
   stake_credential: Data.Nullable(StakeCredentialSchema),
 });
 
+type Credential = Data.Static<typeof CredentialSchema>;
 type Address = Data.Static<typeof AddressSchema>;
-export const Address = AddressSchema as unknown as Address;
 
-export function getAddressFromBech32(bech32Addr: string): Address | undefined {
-  const addressDetails = getAddressDetails(bech32Addr);
+function getCredential(credential: LucidCredential): Credential {
+  switch (credential.type) {
+    case "Script":
+      return {
+        ScriptCredential: [credential.hash] as [string],
+      };
+    case "Key":
+      return {
+        VerificationKeyCredential: [credential.hash] as [string],
+      };
+  }
+}
 
-  let payment_credential = undefined;
-  if (addressDetails.paymentCredential?.type == "Script") {
-    const paymentCredential: [string] = [addressDetails.paymentCredential.hash];
-    payment_credential = {
-      ScriptCredential: paymentCredential,
+function getLucidCredential(credential: Credential): LucidCredential {
+  if ("VerificationKeyCredential" in credential) {
+    return {
+      type: "Key",
+      hash: credential.VerificationKeyCredential[0],
     };
-  } else if (addressDetails.paymentCredential?.type == "Key") {
-    const paymentCredential: [string] = [addressDetails.paymentCredential.hash];
-    payment_credential = {
-      VerificationKeyCredential: paymentCredential,
-    };
-  } else {
-    return undefined;
   }
 
-  // stake credentials are not set as they are not needed for the first tasks
-  // they could be added later if needed
+  return {
+    type: "Script",
+    hash: credential.ScriptCredential[0],
+  };
+}
+
+export function getAddressFromBech32(bech32Address: string): Address {
+  const addressDetails = getAddressDetails(bech32Address);
+
+  if (!addressDetails.paymentCredential) {
+    throw Error("Invalid bech32 address' payment credential");
+  }
 
   return {
-    payment_credential: payment_credential,
-    stake_credential: null,
+    payment_credential: getCredential(
+      addressDetails.paymentCredential,
+    ),
+    stake_credential: addressDetails.stakeCredential
+      ? { Inline: [getCredential(addressDetails.stakeCredential)] }
+      : null,
   };
+}
+
+export function getBech32FromAddress(lucid: Lucid, address: Address): string {
+  const paymentCredential = getLucidCredential(address.payment_credential);
+  if (address.stake_credential && !("Inline" in address.stake_credential)) {
+    throw Error("Pointer staking addresses not supported!");
+  }
+
+  const stakeCredential = address.stake_credential
+    ? getLucidCredential(address.stake_credential["Inline"][0])
+    : undefined;
+  return lucid.utils.credentialToAddress(paymentCredential, stakeCredential);
 }

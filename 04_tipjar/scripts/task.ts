@@ -26,12 +26,15 @@ export type Validators = {
   tipJarAddress: string;
 };
 
-type GameData = {
+export type GameData = {
   scriptValidator: Script;
   scriptAddress: string;
   scriptUtxo: UTxO;
   originalBalance: bigint;
-  lastTx: string | undefined;
+};
+
+export type TestData = {
+  lastTx: string;
 };
 
 function readValidators(lucid: Lucid): Validators {
@@ -93,7 +96,6 @@ export async function setup(lucid: Lucid): Promise<GameData> {
     scriptAddress: validators!.tipJarAddress,
     scriptUtxo: scriptUtxos[0],
     originalBalance: originalBalance,
-    lastTx: undefined,
   };
 }
 
@@ -136,7 +138,11 @@ async function tryToTip(
   return false;
 }
 
-export async function test(gameData: GameData, lucid: Lucid) {
+export async function test(
+  lucid: Lucid,
+  gameData: GameData,
+  testData: TestData,
+): Promise<boolean> {
   let passed = true;
   console.log("================TESTS==================");
 
@@ -144,15 +150,9 @@ export async function test(gameData: GameData, lucid: Lucid) {
 
   console.log(`Your wallet's balance at the end is ${endBalance}`);
 
-  if (gameData.lastTx == undefined) {
-    failTest(
-      "YOU FORGOT TO INCLUDE gameData.lastTx, check that you copied player template correctly",
-    );
-    return false;
-  }
   const scriptUtxo = filterUTXOsByTxHash(
     await lucid.utxosAt(gameData.scriptAddress),
-    gameData.lastTx,
+    testData.lastTx,
   )[0];
 
   // 1. Try to tip to the UTxO
@@ -167,7 +167,6 @@ export async function test(gameData: GameData, lucid: Lucid) {
   // 2. Did not spend too much ADA
   const spentAda = gameData.originalBalance -
     await getWalletBalanceLovelace(lucid);
-  console.log(spentAda);
   if (spentAda < 100000000n) {
     passTest(`TEST 1 PASSED - you spent just enough ADA!`, lucid);
   } else {

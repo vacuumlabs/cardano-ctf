@@ -4,16 +4,16 @@ import {
   cardanoscanLink,
 } from "../../common/offchain/utils.ts";
 import { SellNFTDatum } from "./types.ts";
-import { setup, test } from "./task.ts";
+import { GameData, TestData } from "./task.ts";
 
-export async function play(lucid: Lucid): Promise<boolean> {
+export async function play(
+  lucid: Lucid,
+  gameData: GameData,
+): Promise<TestData> {
   /**
-   * The whole setup of the task is performed in the setup() function.
-   * This function deploys the vulnerable smart contracts to the testnet and returns gameData
-   *      which contain all the things you need to interact with them.
+   * The smart contracts are already deployed, see the [run.ts] file for more details.
+   * The [gameData] variable contains all the things you need to interact with the vulnerable smart contracts.
    */
-
-  const gameData = await setup(lucid);
 
   // The created gameData contains all of the important information. You can find it in following variables.
 
@@ -70,7 +70,4 @@ export async function play(lucid: Lucid): Promise<boolean> {
   await awaitTxConfirms(lucid, buyingTxHash);
 
   // ================ YOUR CODE ENDS HERE
-
-  // We run the tests to see if you succesfully solved the task.
-  return test(gameData, lucid);
 }

@@ -1,3 +1,24 @@
+## Version 0.3 (Milestone 3) - [2024-01-19]
+
+### Added
+
+- We added **three more tasks**:
+  - [purchase_offer](./05_purchase_offer/)
+  - [tipjar_v2](./06_tipjar_v2/)
+  - [multisig_treasury_v2](./07_multisig_treasury_v2/)
+- We added **videos** for clear Milestone achievement purposes.
+
+### Changed
+
+- The code of setting the game up, running the interaction and testing whether
+  the level is successfully completed is now abstracted into a `runTask`
+  function located inside `common/offchain/utils.ts` and run from `run.ts`.
+- The `player_template.ts` and the `player.ts` now contain only the interactions
+  with an already set up environment.
+- These changes are made for all levels. If you have a legacy `player.ts`,
+  compare `player_template.ts` to it to find out what needs to be updated for it
+  to work properly.
+
 ## Version 0.2 (Milestone 2) - [2023-12-15]
 
 ### Added

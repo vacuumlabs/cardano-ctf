@@ -4,15 +4,17 @@ import {
   awaitTxConfirms,
   cardanoscanLink,
 } from "../../common/offchain/utils.ts";
-import { setup, test } from "./task.ts";
+import { GameData, TestData } from "./task.ts";
 
-export async function play(lucid: Lucid): Promise<boolean> {
-  // PART 1 -- the SETUP. DO NOT MODIFY
+export async function play(
+  lucid: Lucid,
+  gameData: GameData,
+): Promise<TestData> {
+  /**
+   * The smart contracts are already deployed, see the [run.ts] file for more details.
+   * The [gameData] variable contains all the things you need to interact with the vulnerable smart contracts.
+   */
 
-  const gameData = await setup(lucid);
-  console.log(`Building a transaction to unlock the locked script UTxO`);
-
-  // PART 2
   // This is just a sanity check, so you do not have to change much here to pass the tests
   // Check the validator code to find out how to unlock the locked ADA!
   // The following code fails, read the validator carefully to find out why?
@@ -21,8 +23,9 @@ export async function play(lucid: Lucid): Promise<boolean> {
   // We find the contract UTxO where the ADA is locked
   // We create the redeemer
 
-  // ================ EDITABLE CODE STARTS HERE
+  // ================ YOUR CODE STARTS HERE
   // We unlock the locked UTxO using the redeemer "Hello, World!".
+  console.log(`Building a transaction to unlock the locked script UTxO`);
 
   const redeemer = Data.to({ msg: fromText("Hello, World!") }, HelloRedeemer);
   const utxo = gameData.scriptUtxo;
@@ -47,7 +50,4 @@ export async function play(lucid: Lucid): Promise<boolean> {
   await awaitTxConfirms(lucid, unlockTxHash);
 
   // ================ YOUR CODE ENDS HERE
-  // Tests start here.
-
-  return test(gameData, lucid);
 }

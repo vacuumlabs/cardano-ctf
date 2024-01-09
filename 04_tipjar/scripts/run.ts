@@ -1,4 +1,5 @@
 import { play } from "./player.ts";
-import { runner } from "../../common/offchain/utils.ts";
+import { setup, test } from "./task.ts";
+import { runTask } from "../../common/offchain/utils.ts";
 
-await runner(play);
+await runTask(setup, play, test);

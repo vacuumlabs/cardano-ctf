@@ -48,10 +48,12 @@ supposed to exploit it. The off-chain is divided into 3 parts:
    up with a unique attack, [drop us a line](../README.md#feedback). We would
    love to hear about that!
 
-The above parts communicate through a structure called `gameData`. It is created
+The above parts communicate through a structure called `GameData`. It is created
 during the setup, and it contains everything you need for solving the challenges
-and everything that the tests require. You should not modify it unless
-specifically instructed to.
+and everything that the tests require. You should not modify it. The tests may
+require additional info contained within a `TestData` structure. You will be
+specifically instructed on how to modify it if needed. It is not needed for this
+task.
 
 To start, you can compile the validators by running `aiken build --keep-traces`
 in the root of the task. Then you can run the sample code by running
@@ -65,7 +67,7 @@ emulator provides early feedback so that you do not need to wait for all the
 transactions being validated and accepted on the actual blockchain. Once you
 solve the task, though, only the testnet offers a real-world environment and so
 it is really important to pass there as well. This default behavior can be
-changed in the `common/offchaion/config.ts`.
+changed in the `common/offchain/config.ts`.
 
 The goal of each task is to pass all the tests by editing the editable parts of
 off-chain code. You will get a _green_ congrats message once you get there.

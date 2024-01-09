@@ -27,7 +27,7 @@ export type Validators = {
   multisigValidator: SpendingValidator;
   multisigAddress: string;
 };
-type GameData = {
+export type GameData = {
   validators: Validators;
   treasuryFunds: bigint;
   treasuryOwners: string[];
@@ -38,6 +38,7 @@ type GameData = {
   multisigUTxO: UTxO;
   originalBalance: bigint;
 };
+export type TestData = void;
 
 function readValidators(lucid: Lucid): Validators {
   const multisig = blueprint.validators.find((v) =>
@@ -149,7 +150,11 @@ export async function setup(lucid: Lucid) {
   };
 }
 
-export async function test(gameData: GameData, lucid: Lucid): Promise<boolean> {
+export async function test(
+  lucid: Lucid,
+  gameData: GameData,
+  _testData: TestData,
+): Promise<boolean> {
   let passed = true;
   console.log("================TESTS==================");
 

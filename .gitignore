@@ -2,6 +2,8 @@
 *.sk
 common/offchain/config.ts
 **/scripts/player.ts
+**/scripts/solution.ts
+**/scripts/solutions/
 
 # Aiken
 **/artifacts/

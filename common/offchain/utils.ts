@@ -82,38 +82,66 @@ export function decodeBase64(str: string): string {
   return textDecoder.decode(decode(str));
 }
 
-export async function runner(play: (lucid: Lucid) => Promise<boolean>) {
-  let tests_passed_emulator = true;
-  if (USE_EMULATOR) {
-    try {
-      console.log("Running on emulator...");
-      tests_passed_emulator = await play(lucid_emulator);
-    } catch (e) {
-      console.log(e);
-      console.log("An error happened while running your code in the emulator.");
-      tests_passed_emulator = false;
+export function runTask<GameData, TestData>(
+  setup: (lucid: Lucid) => Promise<GameData>,
+  play: (lucid: Lucid, gameData: GameData) => Promise<TestData>,
+  test: (
+    lucid: Lucid,
+    gameData: GameData,
+    testData: TestData,
+  ) => Promise<boolean>,
+) {
+  /**
+   * Given a specific environment provided by lucid (emulator, testnet), we:
+   *   1. Set up the level by creating necessary UTxOs.
+   *   2. Run your interaction.
+   *   3. Run tests on the resulting state to find out whether you successfully completed the level.
+   */
+  const runInSingleEnvironment = async (lucid: Lucid): Promise<boolean> => {
+    const gameData = await setup(lucid);
+    const testData = await play(lucid, gameData);
+    return test(lucid, gameData, testData);
+  };
+
+  const runInAllEnvironments = async (
+    run: (lucid: Lucid) => Promise<boolean>,
+  ) => {
+    let testsPassedEmulator = true;
+    if (USE_EMULATOR) {
+      try {
+        console.log("Running on emulator...");
+        testsPassedEmulator = await run(lucid_emulator);
+      } catch (e) {
+        console.log(e);
+        console.log(
+          "An error happened while running your code in the emulator.",
+        );
+        testsPassedEmulator = false;
+      }
+    } else {
+      console.log("Emulator is disabled, skipping...");
     }
-  } else {
-    console.log("Emulator is disabled, skipping...");
-  }
-  if (tests_passed_emulator) {
-    if (!USE_TESTNET) {
-      console.log("Testnet is disabled, skipping...");
-    } else if (lucid_testnet == undefined) {
-      console.log(
-        "Testnet is not configured, finish your configuration according to the README",
-      );
+    if (testsPassedEmulator) {
+      if (!USE_TESTNET) {
+        console.log("Testnet is disabled, skipping...");
+      } else if (lucid_testnet == undefined) {
+        console.log(
+          "Testnet is not configured, finish your configuration according to the README",
+        );
+      } else {
+        console.log(
+          "Running the task on testnet now, this will take some time...",
+        );
+        await run(lucid_testnet);
+      }
     } else {
       console.log(
-        "Running the task on testnet now, this will take some time...",
+        "Tests did not pass on emulator, skipping the testnet. To force testnet, set USE_EMULATOR in config to false.",
       );
-      await play(lucid_testnet);
     }
-  } else {
-    console.log(
-      "Tests did not pass on emulator, skipping the testnet. To force testnet, set USE_EMULATOR in config to false.",
-    );
-  }
+  };
+
+  runInAllEnvironments(runInSingleEnvironment);
 }
 
 export function filter_undefined(input_list: (string | undefined)[]): string[] {

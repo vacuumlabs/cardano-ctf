@@ -1,0 +1,14 @@
+name = "ctf/tipjar_v2"
+version = "0.0.0"
+license = "GPL-3.0"
+description = "Aiken contracts for project 'ctf/tipjar_v2'"
+
+[repository]
+user = "ctf"
+project = "tipjar_v2"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.7.0"
+source = "github"

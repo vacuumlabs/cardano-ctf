@@ -91,14 +91,23 @@ you need to take:
 3. [multisig_treasury](./03_multisig_treasury/) — Unlock treasury without all
    the signatures.
 4. [tipjar](./04_tipjar/) — Try to prevent others from tipping into a Tip Jar.
+5. [purchase_offer](./05_purchase_offer/) — Sell an NFT while collecting more
+   money than offerred.
+6. [tipjar_v2](./06_tipjar_v2/) — The Tip Jar was patched. Try to prevent others
+   from tipping into the upgraded Tip Jar.
+7. [multisig_treasury_v2](./07_multisig_treasury_v2/) — The treasury was
+   upgraded. Try to unlock it without all the signatures again.
 
 ## Troubleshooting
 
 ### Videos
 
 There are videos in the [videos folder](./videos/). Check them out if you're
-struggling. Beware, it can contain spoilers, especially the first video that
-solves the _hello_world_ task entirely.
+struggling with making the framework work. Beware, it can contain spoilers,
+especially the first video that solves the _hello_world_ task entirely. The
+later videos do not explain the solutions. They are here mostly to demonstrate
+Catalyst milestones' completion. You should strive to find the solutions
+yourself.
 
 ### Errors during a transaction submission
 
