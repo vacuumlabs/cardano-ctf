@@ -5,12 +5,14 @@ Welcome to the Cardano Capture the Flag (CTF) challenge by the
 team!
 
 It is a game where Cardano developers and enthusiasts can try to exploit
-purposefully vulnerable smart contracts and learn about the most common security
+purposely vulnerable smart contracts and learn about the most common security
 issues and how to prevent them. In a way, you can try the job of auditors on
 some common Cardano vulnerabilities.
 
 We believe this will provide the community with educational materials needed to
 write more secure smart contracts.
+
+![Cardano CTF](images/cardano-ctf.png)
 
 ## How it works
 
@@ -134,11 +136,14 @@ pass there we try to replicate it on the testnet as well.
 
 ## Feedback
 
-Please, share your thoughts and feedback with us at audit@vacuumlabs.com.
+[Join our Discord](https://discord.gg/5XVW2MUdWu). You can ask questions, share
+your solutions and discuss anything (not only) security related. Alternatively,
+you can share your thoughts and feedback with us at audit@vacuumlabs.com as
+well.
 
 ## Warning & Disclaimer
 
-The smart contract code in the examples is purposefully vulnerable. DO NOT copy
+The smart contract code in the examples is purposely vulnerable. DO NOT copy
 parts of the code into your project, as you may copy a vulnerability, too.
 Beware that the code may contain more than a single vulnerability.
 
