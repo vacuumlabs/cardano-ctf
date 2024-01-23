@@ -12,7 +12,41 @@ some common Cardano vulnerabilities.
 We believe this will provide the community with educational materials needed to
 write more secure smart contracts.
 
-![Cardano CTF](images/cardano-ctf.png)
+<p align="center">
+  <a href="https://discord.gg/5XVW2MUdWu">
+    <img alt="Discord" src="https://img.shields.io/badge/Join%20us%20on-Discord-blue?logo=discord">
+  </a>
+  <a href="https://medium.com/@vacuumlabs_auditing">
+    <img alt="Medium" src="https://img.shields.io/badge/Read%20our%20blogs-on%20Medium-blue?logo=medium">
+  </a>
+  <a href="https://twitter.com/vacuum_crypto">
+    <img alt="Twitter" src="https://img.shields.io/badge/Follow-@vacuum_crypto-blue?logo=x">
+  </a>
+</p>
+
+<p align="center">
+  <img src="images/cardano-ctf.png" alt="Cardano CTF" width="90%">
+</p>
+
+## Tasks
+
+0. [hello_world](./00_hello_world/) — A sanity check to verify that everything's
+   setup correctly.
+1. [sell_nft](./01_sell_nft/) — Try to buy two NFTs by paying less than their
+   stated prices!
+2. [vesting](./02_vesting/) — Try to skip the vesting period.
+3. [multisig_treasury](./03_multisig_treasury/) — Unlock treasury without all
+   the signatures.
+4. [tipjar](./04_tipjar/) — Try to prevent others from tipping into a Tip Jar.
+5. [purchase_offer](./05_purchase_offer/) — Sell an NFT while collecting more
+   money than offerred.
+6. [tipjar_v2](./06_tipjar_v2/) — The Tip Jar was patched. Try to prevent others
+   from tipping into the upgraded Tip Jar.
+7. [multisig_treasury_v2](./07_multisig_treasury_v2/) — The treasury was
+   upgraded. Try to unlock it without all the signatures again.
+8. TBD — Coming soon, please check again on February 20, 2024.
+9. TBD — Coming soon, please check again on February 20, 2024.
+10. TBD — Coming soon, please check again on February 20, 2024.
 
 ## How it works
 
@@ -82,26 +116,6 @@ you need to take:
 4. You are good to go! To verify that everything is set up correctly, try
    solving the very first sample task: [Hello World](./00_hello_world/). You
    should see green test results when everything is done correctly.
-
-## Tasks
-
-0. [hello_world](./00_hello_world/) — A sanity check to verify that everything's
-   setup correctly.
-1. [sell_nft](./01_sell_nft/) — Try to buy two NFTs by paying less than their
-   stated prices!
-2. [vesting](./02_vesting/) — Try to skip the vesting period.
-3. [multisig_treasury](./03_multisig_treasury/) — Unlock treasury without all
-   the signatures.
-4. [tipjar](./04_tipjar/) — Try to prevent others from tipping into a Tip Jar.
-5. [purchase_offer](./05_purchase_offer/) — Sell an NFT while collecting more
-   money than offerred.
-6. [tipjar_v2](./06_tipjar_v2/) — The Tip Jar was patched. Try to prevent others
-   from tipping into the upgraded Tip Jar.
-7. [multisig_treasury_v2](./07_multisig_treasury_v2/) — The treasury was
-   upgraded. Try to unlock it without all the signatures again.
-8. TBD — Coming soon, please check again on February 20, 2024.
-9. TBD — Coming soon, please check again on February 20, 2024.
-10. TBD — Coming soon, please check again on February 20, 2024.
 
 ## Troubleshooting
 
