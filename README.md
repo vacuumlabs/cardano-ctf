@@ -99,6 +99,9 @@ you need to take:
    from tipping into the upgraded Tip Jar.
 7. [multisig_treasury_v2](./07_multisig_treasury_v2/) — The treasury was
    upgraded. Try to unlock it without all the signatures again.
+8. TBD — Coming soon, please check again on February 20, 2024.
+9. TBD — Coming soon, please check again on February 20, 2024.
+10. TBD — Coming soon, please check again on February 20, 2024.
 
 ## Troubleshooting
 
