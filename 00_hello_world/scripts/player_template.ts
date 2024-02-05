@@ -2,7 +2,7 @@ import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import { HelloRedeemer } from "./types.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
+  getFormattedTxDetails,
 } from "../../common/offchain/utils.ts";
 import { GameData, TestData } from "./task.ts";
 
@@ -43,8 +43,11 @@ export async function play(
 
   const unlockTxHash = await signedTx.submit();
 
-  console.log(`UTxO was successfuly unlocked with transaction ${unlockTxHash}
-    ${cardanoscanLink(unlockTxHash, lucid)}`);
+  console.log(
+    `UTxO was successfuly unlocked ${
+      getFormattedTxDetails(unlockTxHash, lucid)
+    }`,
+  );
 
   // We await the transaction confirmations.
   await awaitTxConfirms(lucid, unlockTxHash);

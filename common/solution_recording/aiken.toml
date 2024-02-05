@@ -1,0 +1,14 @@
+name = "ctf/solution_recording"
+version = "0.0.0"
+license = "GPL-3.0"
+description = "Aiken contracts for project 'ctf/solution_recording'"
+
+[repository]
+user = "ctf"
+project = "solution_recording"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.6.0"
+source = "github"

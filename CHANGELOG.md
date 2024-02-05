@@ -1,3 +1,29 @@
+## Version 0.4 (Milestone 4) - [2024-02-20]
+
+### Added
+
+- We added **three more complex tasks**:
+  - [lending](./08_lending/)
+  - [multisig_treasury_v3](./09_multisig_treasury_v3/)
+  - [king_of_cardano](./10_king_of_cardano/)
+- We added **videos** for clear Milestone achievement purposes.
+
+### Changed
+
+- The logging of transaction details is reworked and unified. The logs should be
+  consistent and beautiful.
+- `player_template`s across the codebase have been updated. If you want the
+  update, please modify your `player.ts` files by comparing it to the
+  `player_template.ts`. If you don't care, you don't need to do anything. We
+  kept the previous logging system as well so we don't break your files.
+- We added and modified some common logic. It should have no impact on any of
+  the previous tasks.
+- Solution aggregation: To better track the users' progress, we utilize a custom
+  smart contract for aggregating the number of correct solutions. It's important
+  to note that this contract **does not gather any private information**, it
+  solely collects data already publicly available on the testnet in a more
+  accessible format.
+
 ## Version 0.3 (Milestone 3) - [2024-01-19]
 
 ### Added

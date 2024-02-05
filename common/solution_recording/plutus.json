@@ -1,0 +1,79 @@
+{
+  "preamble": {
+    "title": "ctf/solution_recording",
+    "description": "Aiken contracts for project 'ctf/solution_recording'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "solution_record.record",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/solution_record~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "parameters": [
+        {
+          "title": "_name",
+          "schema": {
+            "$ref": "#/definitions/String"
+          }
+        }
+      ],
+      "compiledCode": "560100003223222253330064a02930b1b99375c002ae69",
+      "hash": "a752cad1abe2ef25dff0640e336c8336381a43ea57c0408757b1ae60"
+    }
+  ],
+  "definitions": {
+    "Int": {
+      "dataType": "integer"
+    },
+    "String": {
+      "dataType": "#string"
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "solution_record/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "problem_id",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "timestamp",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "solver_address",
+              "$ref": "#/definitions/String"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -8,8 +8,8 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   filterUTXOsByTxHash,
+  getFormattedTxDetails,
   getWalletBalanceLovelace,
 } from "../../common/offchain/utils.ts";
 import { createTreasuryDatum } from "./types.ts";
@@ -19,6 +19,7 @@ import {
   failTests,
   passAllTests,
   passTest,
+  submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 
 export type Validators = {
@@ -118,15 +119,16 @@ export async function setup(lucid: Lucid) {
     .complete();
 
   const signedTrTx = await createTreasuryTx.sign().complete();
-  const submitedTrTx = await signedTrTx.submit();
+  const submittedTrTx = await signedTrTx.submit();
   console.log(
-    `Treasury setup transaction was submitted, waiting for confirmations.\ntxHash: ${submitedTrTx}
-  (check details at ${cardanoscanLink(submitedTrTx, lucid)})`,
+    `Treasury setup transaction was submitted${
+      getFormattedTxDetails(submittedTrTx, lucid)
+    }`,
   );
-  await awaitTxConfirms(lucid, submitedTrTx);
+  await awaitTxConfirms(lucid, submittedTrTx);
   const treasuryUTxO = filterUTXOsByTxHash(
     await lucid.utxosAt(validators!.treasuryAddress),
-    submitedTrTx,
+    submittedTrTx,
   )[0];
 
   const originalBalance = await getWalletBalanceLovelace(lucid);
@@ -175,6 +177,8 @@ export async function test(
   }
 
   if (passed) {
+    await submitSolutionRecord(lucid, 7n);
+
     passAllTests(
       "\nCongratulations on the successful completion of the Level 07: Multisig Treasury v2\n" +
         "A blog post describing this vulnerability is not yet out there. However, you can expect it to be published in our Medium from March to June.\n" +

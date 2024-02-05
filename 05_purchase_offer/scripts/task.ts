@@ -21,13 +21,14 @@ import {
   failTests,
   passAllTests,
   passTest,
+  submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   decodeBase64,
   filterUTXOsByTxHash,
+  getFormattedTxDetails,
   getWalletBalanceLovelace,
 } from "../../common/offchain/utils.ts";
 import { createPurchaseOfferDatumSchema } from "./types.ts";
@@ -116,7 +117,7 @@ export async function setup(lucid: Lucid): Promise<GameData> {
   const validators = readValidators();
 
   const assetTokenName = `${UNIQUE_ID} -- NFT`;
-  const utxosAtBeginning = await lucid!.wallet.getUtxos();
+  const utxosAtBeginning = await lucid.wallet.getUtxos();
   const nftOriginUtxo = utxosAtBeginning[0];
   const originalBalance = await getWalletBalanceLovelace(lucid);
   console.log(`Your wallet's balance at the beginning is ${originalBalance}`);
@@ -129,7 +130,7 @@ export async function setup(lucid: Lucid): Promise<GameData> {
     assetTokenName,
     outputReference,
     validators,
-    lucid!,
+    lucid,
   );
 
   const assetPolicyId = parameterizedNFTContract!.policyId;
@@ -172,7 +173,7 @@ export async function setup(lucid: Lucid): Promise<GameData> {
   console.log(
     "Minting a precious NFT and creating multiple purchase offers...",
   );
-  const tx = lucid!
+  const tx = lucid
     .newTx()
     .collectFrom([nftOriginUtxo])
     .attachMintingPolicy(parameterizedNFTContract!.mintNFT)
@@ -217,8 +218,9 @@ export async function setup(lucid: Lucid): Promise<GameData> {
   );
   await awaitTxConfirms(lucid, txHash);
   console.log(
-    `NFT was minted and put to your balance. Purchase offers were also created, txHash: ${txHash}
-      ${cardanoscanLink(txHash, lucid)}`,
+    `NFT was minted and put to your balance. Purchase offers were also created${
+      getFormattedTxDetails(txHash, lucid)
+    }`,
   );
 
   const scriptUtxos = filterUTXOsByTxHash(
@@ -269,6 +271,8 @@ export async function test(
   }
 
   if (passed) {
+    await submitSolutionRecord(lucid, 5n);
+
     passAllTests(
       "\nCongratulations on the successful completion of the Level 05: Purchase Offer\nA blog post describing this vulnerability is not yet out there. However, you can expect it to be published in our Medium from March to June.\nGood luck with the next level.",
       lucid,

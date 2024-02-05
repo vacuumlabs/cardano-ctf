@@ -1,7 +1,7 @@
 import { Data, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
+  getFormattedTxDetails,
 } from "../../common/offchain/utils.ts";
 import { SellNFTDatum } from "./types.ts";
 import { GameData, TestData } from "./task.ts";
@@ -54,7 +54,7 @@ export async function play(
    * DO NOT change anything in the `gameData` variable.
    */
 
-  const tx = await lucid!
+  const tx = await lucid
     .newTx()
     .collectFrom([utxos[1]], Data.void())
     .payToAddress(seller, { lovelace: datum2.price })
@@ -64,8 +64,9 @@ export async function play(
   const signedTx = await tx.sign().complete();
   const buyingTxHash = await signedTx.submit();
 
-  console.log(`BuyNFT transaction submitted, txHash: ${buyingTxHash}
-    ${cardanoscanLink(buyingTxHash, lucid)}`);
+  console.log(
+    `BuyNFT transaction submitted${getFormattedTxDetails(buyingTxHash, lucid)}`,
+  );
 
   await awaitTxConfirms(lucid, buyingTxHash);
 

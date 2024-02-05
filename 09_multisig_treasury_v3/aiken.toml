@@ -1,0 +1,14 @@
+name = "ctf/multisig_treasury_v3"
+version = "0.0.0"
+license = "GPL-3.0"
+description = "Aiken contracts for project 'ctf/multisig_treasury_v3'"
+
+[repository]
+user = "ctf"
+project = "multisig_treasury_v3"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.6.0"
+source = "github"

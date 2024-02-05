@@ -1,0 +1,323 @@
+{
+  "preamble": {
+    "title": "ctf/lending",
+    "description": "Aiken contracts for project 'ctf/lending'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "collateral_token.collateral_token",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "59018c0100003232323232323232322253330053232323253330093370e900018040008991919191919191919191919191919299980d980f00109919299980d19b88001480005288991980080080311299980f8008a5013232533301e3371e00400c29444cc010010004c08c008dd718108009bad301b002375c60320022c603800264664464a66603466e1d2002001100213756603e60300066030004646600200200444a6660380022980103d87a8000132323232533301d3371e026004266e95200033021374c00297ae01330060060033756603c0066eb8c070008c080008c0780052f5bded8c0646600200200e44a666036002297adef6c60132323232533301c3371e911000021003133020337606ea4008dd3000998030030019bab301d003375c6036004603e004603a0026eb0c068004c068004c064004c060004c05c008dd5980a800980a800980a0009809800980900098048029bae300f001300700116300d001300d002300b00130030011498588c014dd5000918019baa0015734aae7555cf2ab9f5740ae855d101",
+      "hash": "80e5d507ebc70d8f16db4ed29909b89f6d834e95ba3e05ee5b5397af"
+    },
+    {
+      "title": "lending.lending",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/lending~1LendingDatum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/lending~1LendingRedeemer"
+        }
+      },
+      "compiledCode": "590fd9010000323232323232323232222323232323232533300c32323232323232323232323232323232323232533301f3370e9001180f008099191919299981199b8748000c0880044c8c8c8c94ccc09cc8cc00400405c894ccc0b00045288991929998159919299981699b87480000044c928981580109919baf300d302c3009302c005008302b002302b001300a3029300a30293006302900213300400400114a06060004605c00226464646464646464a66605e664646464466e1cc028004c010c008cc88c8cc00400400c894ccc0ec00452f5c02660786ea0c00cc0f4004cc008008c0f8004c01c0048dd698039819800980080091299981b0008a5eb804c8c8cc0e4dd400119802002191980080080111299981d0008a5eb804c8c94ccc0e4ccc0e4cdc38010032504a226607a6ea0008cc0100100044cc010010004c0f8008dd6981e000981d0011bad303800130010012253330340011480004cdc02400466004004606e00200e2646464646464646464646464a66607666e1d200000c13232533303d3370e002024264a66607c66e1d2000303d001132325333040323375e6e98c004dd5980e181f980e181f80e9ba6300137566038607e00c4646600200200444a66608c002297adef6c6013232323253330473371e91100002100313304b337606ea4008dd3000998030030019bab3048003375c608c004609400460900022a66608064a66608266e1d2004304000113232323253330453370e900118220008991919299982419b8748000c11c0044c8c94ccc128cdd798149824023981498240040a9998251919299982619b87480000044c92818250010a51304a001302530480471533304a3017302530480081533304a3370e6eb4c078c12011cdd6980f18240040a99982519b87375a602c609008e6eb4c058c12002054ccc128cdc39bad30153048047375a602a60900102a6660946464a66609866e1d20000011324a060940042944c128004c050c12011c54ccc128cdc499b80004375a602a60900100022a66609466ebcc04cc12011cc04cc12002054ccc128cdc39bad301c3048047375a603860900102a66609466609466e1d2002304b37546024609001094128899b8948008ccc044dd5981298240079bae3029304830133048008375c604a60906026609001029405280a5014a029405280a5014a029405280a50375a609c002608c0022c6022608a00a6eb4c12c004c10c00458c08cc108c07cc1080a8c0ec004c11c004c0fc00458c050c0f801454ccc100ccc100cdd7810000a504a229444ccc888c8c8c8cc004004008894ccc128004528899192999824991919198008008051129998280008a5013232533304f533304f3375e605c609a00400c266e24014c054dd5981518268010a5014a226600800800260a800460a40026eb4c13000cc1280084cc010010004528182700118260009919980080080125eb7bdb1808894ccc12800840044ccc00c00cc134008cc894ccc124c8c8cc00400400c894ccc13c0045280991919299982799baf00600114a226600a00a004609e00460a600460a20026050608e004266664444646600200200c44a6660a40022660a666ec0018dd4002a5eb7bdb1804c8c8c8c94ccc14ccdd79980380500126103d8798000133057337600146ea002401454ccc14ccdd780500109919299982a99b87480000044cc164cdd8006182d18298010028802982980099980400500080489982b99bb000237500026600c00c0066eb4c15000cc148008c158008c150004c0a0c11c008dd6980e982380111119ba548000cc140dd419b800020014bd700048999911191980080080291299982880089982919bb0005375000897adef6c6013232323253330523375e6600e012004980103d8798000133056337600126ea002001454ccc148cdd780480109982b19bb000937500100062660ac66ec0008dd4000998030030019bad305300330510023055002305300130283047002375a603a608e0040126098004002602c0044464a66608666e1d20003042001132323253330463370e90001822800899299982399b9000300114c0103d8798000153330473371e0060022980103d87a800014c103d87b8000375c609660880022c604860860086eb8c124004c10400458c084c1000080600b05280a503044001303c001163232533303f3370e90010008a60103d87a800013374a900019821980f181e9822181e80125eb80c0f40054ccc1000545300103d87a800013374a900019820982100aa5eb8058cc02c0508ccc03400407d30103d8798000333009027015375a601a6072070264a66607866e1d200200d13232533303e3370e002026264a66607e66e1ccc8c004004894ccc1100045200013370090011980100118238009919198008008011129998228008a5eb804c8ccc888c8cc00400400c894ccc12c004400c4c8ccc888cc140dd3998281ba9009330503752006660a06ea00092f5c00026eb8c128004dd6982580099801801982780118268009bae30440013756608a002660060066092004608e0026eacc068c0f400d20021533303f33712002600a6eacc068c0f400c54ccc0fcc94ccc100cdc3a4008607e0022646464a66608666ebcc088c104100c088c10400854ccc10cc040c078c10400854ccc10ccdd7980f1820820180f18208010a99982199b87375a602e60820806eb4c05cc10400854ccc10ccdc39bad300f3041040375a601e60820042a66608666e1cdd6980718208201bad300e304100215333043323253330453370e9000000899251304300214a06086002601a60820042a66608666ebcc034c104100c034c10400854ccc10ccdd798061820820180618208010a99982199b87375a602a60820806eb4c054c1040084cdc3a400460886ea8c02cc1040085280a5014a029405280a5014a029405280a50303a0013046001303e001163013303d003133004023301e303d03c14a0294052819b80375a6024607807666e0ccdc11bad3012303c03b375a6014607807690504e008b1980600a9199807000810260103d87a800033300a028016375a601c60740722a66607866e1d200400d132533303d3370e9000181e00089919299981f99b8748008c100dd51803981e81e0998020118008a503043001303b001163017303a039132533303d3370e9000181e0008991919299982019b8748000c0fc0044c8c94ccc108cc01c0980104c8c94ccc110cdc3a4004002266e2400cdd6982498210010a503042001302130403021304002814a06eb4c118004c0f800458c024c0f40f0c10c004c0ec00458c05cc0e80e488c94ccc0f8cdc3a4000607a002264646600200200a44a66608800229404c8c94ccc10ccdc78010028a511330040040013048002375c608c0026eb8c10cc0f000458c070c0ec0048ccc0080052201004881002223233223253330403370e9001000880109bad3045303e003303e00232533303e3370e90010008a6103d87a8000132323300100100222533304400114c103d87a800013232323253330453371e014004266e95200033049375000297ae0133006006003375a608c0066eb8c110008c120008c118004dd59821981e001181e000a4000646600200200844a6660820022980103d87a800013232323253330423371e010004266e95200033046374c00297ae0133006006003375660860066eb8c104008c114008c10c0048c0f8c0fcc0fcc0fcc0fcc0fcc0fcc0fc0048c0f4c0f8c0f8c0f8c0f8c0f8c0f80048c0f0c0f4c0f4c0f4c0f4c0f40048c0ecc0f0c0f0c0f0c0f00048c0e8c0ecc0ecc0ec0048c94ccc0d4cdc3a4000002264944c0cc00852818198009111919299981d181e80108008b181d800998070019299981b19baf3015303400100313370e64a66606e66e1d200430360011323232375a601860700046062002607a002606a0022c60146068002004294088c8ccc00400400d2000222533303900210011333003003303c00233225333038300600213370000290010800981d8010009111919299981a99b8748000c0d00044c8c8c8cdd78010031816800981d80098198008b191980080080211299981c8008a60103d87a8000132323232533303a3375e00e004266e9520003303e0014bd70099803003001981d801981c801181e801181d80099ba548008cc0dcc048c0c400d2f5c0605c0562c46068606a606a606a606a606a606a606a606a0024646600200200444a666066002297ae0133034323253330323370e9002181880089919190011816000981c00098180008b1802981798061817800981a80099801001181b0009181918199819800980080198008009129998170008a4000266e0120023300200230310013300101723375e0066010604e6008604e00244646600200200644a66605c002297ae013232533302d300500213303100233004004001133004004001303200230300011630053024300130240022302b302c0013029001302100116323300100101222533302700114c103d87a80001323253330263375e600a604800400c266e9520003302a0024bd7009980200200098158011814800918138009812800980e8080b1bab30230013023002375860420026042004603e002603e002603c002603a002603800260360046eb0c064004c064004c060008dd6180b0009807001980a000980a001180900098050038a4c2c600200e464a66601866e1d20000011533300f300a00214985854ccc030cdc3a40040022a66601e60140042930b0a99980619b874801000454ccc03cc028008526161533300c3370e90030008a99980798050010a4c2c2c6014002600200c464a66601466e1d20000011323232323232323232323232323232323232533301f3022002132323232498c94ccc080cdc3a4000002264646464a66604e60540042930b1bae30280013028002375c604c002603c0122c603c01064a66603e66e1d20000011323253330243027002149858dd69812800980e8050a99980f99b874800800454ccc088c0740285261616301d00932533301e3370e9000000899192999811981300109924c60320022c604800260380222a66603c66e1d200200115333021301c01114985858c070040c05404458dd69810000981000119b8748008c068dd5180f000980f001180e000980e001180d000980d0011bad30180013018002375a602c002602c0046eb4c050004c050008c048004c048008c040004c02000858c0200048c94ccc024cdc3a4000002264646464a6660206026004264649319299980799b87480000044c8c94ccc050c05c0084c9263253330123370e900000089919299980b980d00109924c601c0022c603000260200042a66602466e1d20020011323232323232533301b301e002149858dd6980e000980e0011bad301a001301a002375a603000260200042c60200022c602a002601a0062a66601e66e1d200200115333012300d00314985858c034008c01c00c58c044004c044008c03c004c01c00858c01c0048c94ccc020cdc3a400000226464a66601a60200042930b1bae300e0013006002153330083370e900100089919299980698080010a4c2c6eb8c038004c01800858c0180048c014dd5000918019baa0015734aae7555cf2ab9f5740ae855d11",
+      "hash": "3af00ba3b14a92ad689623bf224683777490afba421b3f21ff03179a"
+    }
+  ],
+  "definitions": {
+    "Bool": {
+      "title": "Bool",
+      "anyOf": [
+        {
+          "title": "False",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "True",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "Option$Int": {
+      "title": "Optional",
+      "anyOf": [
+        {
+          "title": "Some",
+          "description": "An optional value.",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        },
+        {
+          "title": "None",
+          "description": "Nothing.",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "Option$aiken/transaction/credential/Address": {
+      "title": "Optional",
+      "anyOf": [
+        {
+          "title": "Some",
+          "description": "An optional value.",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Address"
+            }
+          ]
+        },
+        {
+          "title": "None",
+          "description": "Nothing.",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "Option$aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Optional",
+      "anyOf": [
+        {
+          "title": "Some",
+          "description": "An optional value.",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "None",
+          "description": "Nothing.",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "aiken/transaction/credential/Address": {
+      "title": "Address",
+      "description": "A Cardano `Address` typically holding one or two credential references.\n\n Note that legacy bootstrap addresses (a.k.a. 'Byron addresses') are\n completely excluded from Plutus contexts. Thus, from an on-chain\n perspective only exists addresses of type 00, 01, ..., 07 as detailed\n in [CIP-0019 :: Shelley Addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019/#shelley-addresses).",
+      "anyOf": [
+        {
+          "title": "Address",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "payment_credential",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            },
+            {
+              "title": "stake_credential",
+              "$ref": "#/definitions/Option$aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Credential": {
+      "title": "Credential",
+      "description": "A general structure for representing an on-chain `Credential`.\n\n Credentials are always one of two kinds: a direct public/private key\n pair, or a script (native or Plutus).",
+      "anyOf": [
+        {
+          "title": "VerificationKeyCredential",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        },
+        {
+          "title": "ScriptCredential",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Referenced",
+      "description": "Represent a type of object that can be represented either inline (by hash)\n or via a reference (i.e. a pointer to an on-chain location).\n\n This is mainly use for capturing pointers to a stake credential\n registration certificate in the case of so-called pointer addresses.",
+      "anyOf": [
+        {
+          "title": "Inline",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "Pointer",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "title": "slot_number",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "transaction_index",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "certificate_index",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "lending/AssetClass": {
+      "title": "AssetClass",
+      "anyOf": [
+        {
+          "title": "AssetClass",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "policy_id",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "asset_name",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "lending/LendingDatum": {
+      "title": "LendingDatum",
+      "anyOf": [
+        {
+          "title": "LendingDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "borrower",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Address"
+            },
+            {
+              "title": "lender",
+              "$ref": "#/definitions/Option$aiken~1transaction~1credential~1Address"
+            },
+            {
+              "title": "borrowed_amount",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "interest",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "loan_duration",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "loan_end",
+              "$ref": "#/definitions/Option$Int"
+            },
+            {
+              "title": "collateral",
+              "$ref": "#/definitions/lending~1AssetClass"
+            },
+            {
+              "title": "repaid",
+              "$ref": "#/definitions/Bool"
+            },
+            {
+              "title": "unique_id",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "lending/LendingRedeemer": {
+      "title": "LendingRedeemer",
+      "anyOf": [
+        {
+          "title": "Lend",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "Repay",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        },
+        {
+          "title": "ClaimRepayment",
+          "dataType": "constructor",
+          "index": 2,
+          "fields": []
+        },
+        {
+          "title": "ClaimCollateral",
+          "dataType": "constructor",
+          "index": 3,
+          "fields": []
+        }
+      ]
+    }
+  }
+}

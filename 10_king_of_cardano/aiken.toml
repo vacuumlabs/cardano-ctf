@@ -1,0 +1,14 @@
+name = "ctf/king_of_cardano"
+version = "0.0.0"
+license = "GPL-3.0"
+description = "Aiken contracts for project 'ctf/king_of_cardano'"
+
+[repository]
+user = "ctf"
+project = "king_of_cardano"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.6.0"
+source = "github"

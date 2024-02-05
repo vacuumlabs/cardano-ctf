@@ -7,8 +7,8 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   filterUTXOsByTxHash,
+  getFormattedTxDetails,
   getWalletBalanceLovelace,
 } from "../../common/offchain/utils.ts";
 import blueprint from "../plutus.json" assert { type: "json" };
@@ -17,6 +17,7 @@ import {
   failTests,
   passAllTests,
   passTest,
+  submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 
 export type GameData = {
@@ -75,10 +76,9 @@ export async function setup(lucid: Lucid) {
 
   await awaitTxConfirms(lucid, txHash);
 
-  console.log(`10 ADA locked into the contract at:
-          Tx ID: ${txHash}
-            ${cardanoscanLink(txHash, lucid)}
-      `);
+  console.log(
+    `10 ADA locked into the contract${getFormattedTxDetails(txHash, lucid)}`,
+  );
 
   const contractAddress = lucid.utils.validatorToAddress(validator);
 
@@ -107,6 +107,8 @@ export async function test(
     passTest("TEST 1 PASSED", lucid);
   }
   if (passed) {
+    await submitSolutionRecord(lucid, 0n);
+
     passAllTests(
       "\nCongratulations on the successful completion of the Level 00: Hello World!\nGood luck with the next level.",
       lucid,

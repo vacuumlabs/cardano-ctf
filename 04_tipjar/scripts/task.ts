@@ -8,8 +8,8 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   filterUTXOsByTxHash,
+  getFormattedTxDetails,
   getWalletBalanceLovelace,
 } from "../../common/offchain/utils.ts";
 import {
@@ -17,6 +17,7 @@ import {
   failTests,
   passAllTests,
   passTest,
+  submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 import { createTipJarDatum, TipJarDatum, TipJarRedeemer } from "./types.ts";
 import blueprint from "../plutus.json" assert { type: "json" };
@@ -69,7 +70,7 @@ export async function setup(lucid: Lucid): Promise<GameData> {
 
   console.log("Setting up tipjar!");
 
-  const tx = await lucid!
+  const tx = await lucid
     .newTx()
     .payToContract(validators!.tipJarAddress, {
       inline: createTipJarDatum(owner, []),
@@ -81,8 +82,9 @@ export async function setup(lucid: Lucid): Promise<GameData> {
     "Setup transaction was submitted, awaiting confirmations!",
   );
   await awaitTxConfirms(lucid, txHash);
-  console.log(`Tip Jar was succesfully created, txHash: ${txHash}
-        ${cardanoscanLink(txHash, lucid)}`);
+  console.log(
+    `Tip Jar was succesfully created${getFormattedTxDetails(txHash, lucid)}`,
+  );
 
   const scriptUtxos = filterUTXOsByTxHash(
     await lucid.utxosAt(validators!.tipJarAddress),
@@ -116,7 +118,7 @@ async function tryToTip(
 
   console.log("Trying to tip some more...");
   try {
-    const tx = await lucid!
+    const tx = await lucid
       .newTx()
       .collectFrom([utxo], Data.to("AddTip", TipJarRedeemer))
       .payToContract(contract, {
@@ -175,6 +177,8 @@ export async function test(
   }
 
   if (passed) {
+    await submitSolutionRecord(lucid, 4n);
+
     passAllTests(
       "\nCongratulations on the successful completion of the Level 04: TipJar! Good luck with the next level.",
       lucid,

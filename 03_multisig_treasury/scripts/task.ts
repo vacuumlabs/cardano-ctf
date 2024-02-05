@@ -7,9 +7,9 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   decodeBase64,
   filterUTXOsByTxHash,
+  getFormattedTxDetails,
   getWalletBalanceLovelace,
 } from "../../common/offchain/utils.ts";
 import { createMultisigDatum, createTreasuryDatum } from "./types.ts";
@@ -19,6 +19,7 @@ import {
   failTests,
   passAllTests,
   passTest,
+  submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 
 export type Validators = {
@@ -95,15 +96,16 @@ export async function setup(lucid: Lucid) {
     .complete();
 
   const signedTrTx = await createTreasuryTx.sign().complete();
-  const submitedTrTx = await signedTrTx.submit();
+  const submittedTrTx = await signedTrTx.submit();
   console.log(
-    `Treasury setup transaction was submitted, waiting for confirmations.\ntxHash: ${submitedTrTx}
-  (check details at ${cardanoscanLink(submitedTrTx, lucid)})`,
+    `Treasury setup transaction was submitted${
+      getFormattedTxDetails(submittedTrTx, lucid)
+    }`,
   );
-  await awaitTxConfirms(lucid, submitedTrTx);
+  await awaitTxConfirms(lucid, submittedTrTx);
   const treasuryUtxo = filterUTXOsByTxHash(
     await lucid.utxosAt(validators!.treasuryAddress),
-    submitedTrTx,
+    submittedTrTx,
   )[0];
 
   const createMultisigTx = await lucid
@@ -120,16 +122,17 @@ export async function setup(lucid: Lucid) {
     .complete();
 
   const signedMSTx = await createMultisigTx.sign().complete();
-  const submitedMSTx = await signedMSTx.submit();
+  const submittedMSTx = await signedMSTx.submit();
   console.log(
-    `Multisig setup transaction was submitted, waiting for confirmations.\ntxHash: ${submitedMSTx}
-  (check details at ${cardanoscanLink(submitedMSTx, lucid)})`,
+    `Multisig setup transaction was submitted${
+      getFormattedTxDetails(submittedMSTx, lucid)
+    }`,
   );
-  await awaitTxConfirms(lucid, submitedMSTx);
+  await awaitTxConfirms(lucid, submittedMSTx);
 
   const multisigUtxo = filterUTXOsByTxHash(
     await lucid.utxosAt(validators!.multisigAddress),
-    submitedMSTx,
+    submittedMSTx,
   )[0];
 
   const originalBalance = await getWalletBalanceLovelace(lucid);
@@ -144,7 +147,7 @@ export async function setup(lucid: Lucid) {
     multisigReleaseValue: multisigRelease,
     multisigBeneficiary: multisigBeneficiary,
     treasuryUTxO: treasuryUtxo,
-    treasuryUTxOHash: submitedTrTx,
+    treasuryUTxOHash: submittedTrTx,
     multisigUTxO: multisigUtxo,
     originalBalance: originalBalance,
   };
@@ -180,6 +183,8 @@ export async function test(
   }
 
   if (passed) {
+    await submitSolutionRecord(lucid, 3n);
+
     const encoded_blog_url =
       "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tdnVsbmVyYWJpbGl0aWVzLTMtdHJ1c3Qtbm8tdXR4by1iMjUyNjUwYWMyYjk=";
 

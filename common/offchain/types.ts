@@ -1,8 +1,10 @@
 import {
+  C,
   Credential as LucidCredential,
   Data,
   getAddressDetails,
   Lucid,
+  networkToId,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 
 export const CredentialSchema = Data.Enum([
@@ -15,11 +17,9 @@ const StakeCredentialSchema = Data.Enum([
   Data.Object({ Inline: Data.Tuple([CredentialSchema]) }),
   Data.Object({
     Pointer: Data.Tuple([
-      Data.Object({
-        Slot_number: Data.Integer(),
-        Transaction_index: Data.Integer(),
-        Certificate_index: Data.Integer(),
-      }),
+      Data.Integer(),
+      Data.Integer(),
+      Data.Integer(),
     ]),
   }),
 ]);
@@ -78,12 +78,29 @@ export function getAddressFromBech32(bech32Address: string): Address {
 
 export function getBech32FromAddress(lucid: Lucid, address: Address): string {
   const paymentCredential = getLucidCredential(address.payment_credential);
-  if (address.stake_credential && !("Inline" in address.stake_credential)) {
-    throw Error("Pointer staking addresses not supported!");
+
+  if (!address.stake_credential || ("Inline" in address.stake_credential)) {
+    const stakeCredential = address.stake_credential
+      ? getLucidCredential(address.stake_credential["Inline"][0])
+      : undefined;
+    return lucid.utils.credentialToAddress(paymentCredential, stakeCredential);
   }
 
-  const stakeCredential = address.stake_credential
-    ? getLucidCredential(address.stake_credential["Inline"][0])
-    : undefined;
-  return lucid.utils.credentialToAddress(paymentCredential, stakeCredential);
+  return C.PointerAddress.new(
+    networkToId(lucid.network),
+    paymentCredential.type === "Key"
+      ? C.StakeCredential.from_keyhash(
+        C.Ed25519KeyHash.from_hex(paymentCredential.hash),
+      )
+      : C.StakeCredential.from_scripthash(
+        C.ScriptHash.from_hex(paymentCredential.hash),
+      ),
+    C.Pointer.new(
+      C.BigNum.from_str(address.stake_credential.Pointer[0].toString()),
+      C.BigNum.from_str(address.stake_credential.Pointer[1].toString()),
+      C.BigNum.from_str(address.stake_credential.Pointer[2].toString()),
+    ),
+  )
+    .to_address()
+    .to_bech32(undefined);
 }

@@ -1,8 +1,8 @@
 import { Data, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   filterUTXOsByTxHash,
+  getFormattedTxDetails,
 } from "../../common/offchain/utils.ts";
 import {
   createMultisigDatum,
@@ -52,14 +52,17 @@ export async function play(
     .complete();
 
   const signedMSTx = await signMultisigTx.sign().complete();
-  const submitedMSTx = await signedMSTx.submit();
-  console.log(`Multisig signing transaction submitted, txHash: ${submitedMSTx}
-  (check details at ${cardanoscanLink(submitedMSTx, lucid)})`);
-  await awaitTxConfirms(lucid, submitedMSTx);
+  const submittedMSTx = await signedMSTx.submit();
+  console.log(
+    `Multisig signing transaction submitted${
+      getFormattedTxDetails(submittedMSTx, lucid)
+    }`,
+  );
+  await awaitTxConfirms(lucid, submittedMSTx);
 
   const multisigUTxO = filterUTXOsByTxHash(
     await lucid.utxosAt(gameData.validators.multisigAddress),
-    submitedMSTx,
+    submittedMSTx,
   );
 
   const treasuryBalance = gameData.treasuryFunds -
@@ -82,12 +85,13 @@ export async function play(
     .complete();
 
   const signedUnlockTx = await unlockTreasuryTx.sign().complete();
-  const submitedUnlockTx = await signedUnlockTx.submit();
+  const submittedUnlockTx = await signedUnlockTx.submit();
   console.log(
-    `Access treasury signed transaction submitted, txHash: ${submitedUnlockTx}
-  (check details at ${cardanoscanLink(submitedUnlockTx, lucid)})`,
+    `Access treasury signed transaction submitted${
+      getFormattedTxDetails(submittedUnlockTx, lucid)
+    }`,
   );
-  await awaitTxConfirms(lucid, submitedUnlockTx);
+  await awaitTxConfirms(lucid, submittedUnlockTx);
 
   // ================ YOUR CODE ENDS HERE
 }

@@ -18,13 +18,14 @@ import {
   failTests,
   passAllTests,
   passTest,
+  submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   decodeBase64,
   filterUTXOsByTxHash,
+  getFormattedTxDetails,
   getWalletBalanceLovelace,
 } from "../../common/offchain/utils.ts";
 import { createSellNFTDatumSchema, SellNFTDatum } from "./types.ts";
@@ -148,13 +149,13 @@ export async function setup(lucid: Lucid) {
     tokenName1,
     outputReference,
     validators,
-    lucid!,
+    lucid,
   );
   const parameterizedContract2 = applyParamsToNFT(
     tokenName2,
     outputReference,
     validators,
-    lucid!,
+    lucid,
   );
   const assetName1 = `${parameterizedContract1!.policyId}${
     fromText(tokenName1)
@@ -167,7 +168,7 @@ export async function setup(lucid: Lucid) {
 
   const mintRedeemer = Data.void();
   console.log("Minting NFTs and locking them into a vulnerable contract...");
-  const tx = await lucid!
+  const tx = await lucid
     .newTx()
     .collectFrom([nftOriginUtxo])
     .attachMintingPolicy(parameterizedContract1!.mintNFT)
@@ -193,8 +194,7 @@ export async function setup(lucid: Lucid) {
     "Setup transaction was submitted to testnet, awaiting confirmations!",
   );
   await awaitTxConfirms(lucid, txHash);
-  console.log(`NFTs were minted, txHash: ${txHash}
-      ${cardanoscanLink(txHash, lucid)}`);
+  console.log(`NFTs were minted${getFormattedTxDetails(txHash, lucid)}`);
 
   const scriptUtxos = filterUTXOsByTxHash(
     await lucid.utxosAt(validators!.sellingAddress),
@@ -275,6 +275,8 @@ export async function test(
   }
 
   if (passed) {
+    await submitSolutionRecord(lucid, 1n);
+
     const encoded_blog_url =
       "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tdnVsbmVyYWJpbGl0aWVzLTEtZG91YmxlLXNhdGlzZmFjdGlvbi0yMTlmMWJjOTY2NWU=";
 

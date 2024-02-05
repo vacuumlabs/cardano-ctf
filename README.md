@@ -44,9 +44,11 @@ write more secure smart contracts.
    from tipping into the upgraded Tip Jar.
 7. [multisig_treasury_v2](./07_multisig_treasury_v2/) — The treasury was
    upgraded. Try to unlock it without all the signatures again.
-8. TBD — Coming soon, please check again on February 20, 2024.
-9. TBD — Coming soon, please check again on February 20, 2024.
-10. TBD — Coming soon, please check again on February 20, 2024.
+8. [lending](./08_lending/) — Hack a simple peer-to-peer lending protocol.
+9. [multisig_treasury_v3](./09_multisig_treasury_v3/) — The treasury was
+   upgraded again! Let's compromise it once again 💪.
+10. [king_of_cardano](./10_king_of_cardano/) — Become the King of Cardano and
+    prevent others from overthrowing you.
 
 ## How it works
 

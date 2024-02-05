@@ -1,8 +1,8 @@
 import { Data, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   getCurrentTime,
+  getFormattedTxDetails,
   hour,
   minute,
   sleep,
@@ -54,10 +54,7 @@ export async function play(
 
   const txHash = await signedTx.submit();
   await awaitTxConfirms(lucid, txHash);
-  console.log(`vesting unlocked at:
-          Tx ID: ${txHash}
-            ${cardanoscanLink(txHash, lucid)}
-      `);
+  console.log(`Vesting unlocked${getFormattedTxDetails(txHash, lucid)}`);
 
   // ================ YOUR CODE ENDS HERE
 }

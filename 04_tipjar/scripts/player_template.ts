@@ -1,7 +1,7 @@
 import { Data, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
+  getFormattedTxDetails,
 } from "../../common/offchain/utils.ts";
 import { createTipJarDatum, TipJarDatum, TipJarRedeemer } from "./types.ts";
 import { GameData, TestData } from "./task.ts";
@@ -40,7 +40,7 @@ export async function play(
    * In the code below, we tip 10 ADA into the Jar and add a Thank you! note for the owner.
    */
 
-  const tx = await lucid!
+  const tx = await lucid
     .newTx()
     .collectFrom([utxo], Data.to("AddTip", TipJarRedeemer))
     .payToContract(contract, {
@@ -52,8 +52,11 @@ export async function play(
   const signedTx = await tx.sign().complete();
   const tippingTxHash = await signedTx.submit();
 
-  console.log(`AddTip transaction submitted, txHash: ${tippingTxHash}
-  ${cardanoscanLink(tippingTxHash, lucid)}`);
+  console.log(
+    `AddTip transaction submitted${
+      getFormattedTxDetails(tippingTxHash, lucid)
+    }`,
+  );
 
   await awaitTxConfirms(lucid, tippingTxHash);
   /**

@@ -3,12 +3,14 @@ import {
   BLOCKFROST_URL,
   CONFIRMS_WAIT,
   emulator,
+  EMULATOR_PRIVATE_KEY,
   lucid_emulator,
   lucid_testnet,
+  PRIVATE_KEY,
   USE_EMULATOR,
   USE_TESTNET,
 } from "./config.ts";
-import { Emulator, Lucid, UTxO } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { C, Lucid, UTxO } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import { OurEmulator } from "./emulator_provider.ts";
 import {
   decode,
@@ -20,8 +22,8 @@ async function writeStringWithoutNewline(s: string) {
   await Deno.stdout.write(text);
 }
 
-export function isEmulator(l: Lucid) {
-  return l.provider instanceof OurEmulator;
+export function isEmulator(lucid: Lucid) {
+  return lucid.provider instanceof OurEmulator;
 }
 
 export function awaitTxConfirms(
@@ -63,14 +65,18 @@ export function filterUTXOsByTxHash(utxos: UTxO[], txhash: string) {
 }
 
 export async function getWalletBalanceLovelace(lucid: Lucid) {
-  const utxos = await lucid?.wallet.getUtxos()!;
+  const utxos = await lucid.wallet.getUtxos()!;
   return utxos.reduce((sum, utxo) => sum + utxo.assets.lovelace, 0n);
 }
 
 export function cardanoscanLink(txHash: string, lucid: Lucid) {
-  if (isEmulator(lucid)) return "";
-  return " (check details at https://preview.cardanoscan.io/transaction/" +
-    txHash + ")";
+  return isEmulator(lucid)
+    ? ""
+    : `Check details at https://preview.cardanoscan.io/transaction/${txHash} `;
+}
+
+export function getFormattedTxDetails(txHash: string, lucid: Lucid) {
+  return `\n\tTx ID: ${txHash}\n\t${cardanoscanLink(txHash, lucid)}`;
 }
 
 export function encodeBase64(str: string): string {
@@ -162,8 +168,8 @@ export async function sleep(milliseconds: bigint): Promise<void> {
 }
 
 export function getCurrentTime(lucid: Lucid) {
-  if (lucid.provider instanceof Emulator) {
-    return lucid.provider.now();
+  if (isEmulator(lucid)) {
+    return (lucid.provider as OurEmulator).now();
   }
   const current = new Date();
   return current.getTime();
@@ -179,4 +185,42 @@ export function minute() {
 
 export function hour() {
   return 60 * minute();
+}
+
+export function privateKeyToPubKeyHash(bech32PrivateKey: string) {
+  return C.PrivateKey.from_bech32(bech32PrivateKey).to_public().hash();
+}
+
+export function pubKeyHashToAddress(pubKeyHash: C.Ed25519KeyHash) {
+  return C.EnterpriseAddress.new(0, C.StakeCredential.from_keyhash(pubKeyHash))
+    .to_address()
+    .to_bech32(undefined);
+}
+
+export function resetWallet(lucid: Lucid) {
+  if (isEmulator(lucid)) {
+    lucid.selectWalletFromPrivateKey(EMULATOR_PRIVATE_KEY);
+  } else {
+    lucid.selectWalletFromPrivateKey(PRIVATE_KEY);
+  }
+}
+
+export async function fundWallet(
+  lucid: Lucid,
+  address: string,
+  lovelace: bigint,
+) {
+  const tx = await lucid
+    .newTx()
+    .payToAddress(address, { lovelace })
+    .complete();
+
+  const signedTx = await tx.sign().complete();
+  const submittedTx = await signedTx.submit();
+
+  console.log(
+    `Funded wallet ${address}${getFormattedTxDetails(submittedTx, lucid)}`,
+  );
+
+  await awaitTxConfirms(lucid, submittedTx);
 }

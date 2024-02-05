@@ -1,7 +1,7 @@
 import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
+  getFormattedTxDetails,
 } from "../../common/offchain/utils.ts";
 import { PurchaseOfferDatum, SellRedeemer } from "./types.ts";
 import { getBech32FromAddress } from "../../common/offchain/types.ts";
@@ -45,7 +45,7 @@ export async function play(
     },
   }, SellRedeemer);
 
-  const tx = await lucid!
+  const tx = await lucid
     .newTx()
     .collectFrom([offerUtxo], redeemer)
     .payToAddress(offerUtxoOwnerAddress, { [asset]: BigInt(1) })
@@ -55,8 +55,11 @@ export async function play(
   const signedTx = await tx.sign().complete();
   const purchaseTxHash = await signedTx.submit();
 
-  console.log(`Purchase Offer transaction submitted, txHash: ${purchaseTxHash}
-    ${cardanoscanLink(purchaseTxHash, lucid)}`);
+  console.log(
+    `Purchase Offer transaction submitted${
+      getFormattedTxDetails(purchaseTxHash, lucid)
+    }`,
+  );
 
   await awaitTxConfirms(lucid, purchaseTxHash);
 

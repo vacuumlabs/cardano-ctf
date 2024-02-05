@@ -5,9 +5,9 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
-  cardanoscanLink,
   filterUTXOsByTxHash,
   getCurrentTime,
+  getFormattedTxDetails,
   getWalletBalanceLovelace,
   hour,
 } from "../../common/offchain/utils.ts";
@@ -17,6 +17,7 @@ import {
   failTests,
   passAllTests,
   passTest,
+  submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 import { createVestingDatum } from "./types.ts";
 
@@ -72,8 +73,11 @@ export async function setup(lucid: Lucid) {
   console.log(
     `                               Current time: ${getCurrentTime(lucid)}`,
   );
-  console.log(`5 ADA locked into the vesting contract until ${lockedUntil}`);
-  console.log(`Tx ID: ${txHash} ${cardanoscanLink(txHash, lucid)}`);
+  console.log(
+    `5 ADA locked into the vesting contract until ${lockedUntil}${
+      getFormattedTxDetails(txHash, lucid)
+    }`,
+  );
 
   console.log(`\n=== SETUP WAS SUCCESSFUL ===\n`);
 
@@ -125,6 +129,8 @@ export async function test(
     passTest("TEST 3 PASSED", lucid);
   }
   if (passed) {
+    await submitSolutionRecord(lucid, 2n);
+
     passAllTests(
       "\nCongratulations on the successful completion of the Level 02: Vesting\nGood luck with the next level.",
       lucid,

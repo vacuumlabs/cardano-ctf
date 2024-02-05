@@ -1,0 +1,326 @@
+{
+  "preamble": {
+    "title": "ctf/king_of_cardano",
+    "description": "Aiken contracts for project 'ctf/king_of_cardano'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "king_nft.king_nft",
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/ByteArray"
+        }
+      },
+      "parameters": [
+        {
+          "title": "king_of_cardano_script_hash",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        },
+        {
+          "title": "unique_nft_policy_id",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        },
+        {
+          "title": "unique_nft_tn",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        }
+      ],
+      "compiledCode": "59033c0100003232323232323232322322322322232533300c32323232323232323232323253330183370e9000180b8048991919191919191919299981218138010991929998118028a99981199b873232333001001002480008894ccc0a800840044ccc00c00cc0b4008cc894ccc0a4c8c94ccc0accdc3a4004002264944c0a400852818148009806181398061813801099b80001480084004c0b0008004c8cc00400404c894ccc0a000452f5c026605260126046605400266004004605600290010a99981199b8733300800c01d01b4800454ccc08ccdc3800a40042a66604666e212000371a030266e3c008cdc500c24513206973204b696e67206f662043617264616e6f0014a029405280a5014a06eb4c090008dd718110008b1812800999119299981119b874800800440084dd59813981000198100011980280400325eb7bdb180cc88c8cc00400400c894ccc09400452809919299981218028010a51133004004001302900230270013758600260380224a66603e6464a66604266e1d20000011324a0603e004266e3cdd71813180f80100e980f8009801180e9801180e9801980e800899b8733300437566006603a6006603a00203202e90010a50230230012302230230012223233223253330223370e9001000880109bad3027302000330200023253330203370e90010008a60103d87a8000132323300100100222533302600114c103d87a800013232323253330273371e014004266e9520003302b375000297ae0133006006003375a60500066eb8c098008c0a8008c0a0004dd59812980f001180f000a40006600800600444646600200200644a666042002298103d87a800013232323253330223371e00e004266e95200033026374c00297ae0133006006003375660460066eb8c084008c094008c08c004dd7180f000980b0048b191980080080111299980e0008a5eb7bdb1804c8c8c8c94ccc074cdc7a441000021003133021337606ea4008dd3000998030030019bab301e003375c60380046040004603c0026eacc06c004c06c004c068004c064004c060008dd6180b0009807001980a000980a001180900098050010a4c2c6eb8008dd70009bae001375c0024600a6ea80048c00cdd5000ab9a5573aaae7955cfaba05742ae89",
+      "hash": "5e56043720d4fa9ae736e9f9331aec6ae83da412e2b09390bcabbd99"
+    },
+    {
+      "title": "king_of_cardano.king_of_cardano",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/types~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/types~1Redeemer"
+        }
+      },
+      "parameters": [
+        {
+          "title": "admin_pkh",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        },
+        {
+          "title": "unique_nft_policy_id",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        },
+        {
+          "title": "unique_nft_tn",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        }
+      ],
+      "compiledCode": "590763010000323232323232323232232232232222323232325333010323253330123370e900118088008991919191919191919191919299980f19b8748000c0740044c8c94ccc080cdc3991919980080080124000444a66604e0042002266600600660540046644a66604c6464a66605066e1d20020011324a2604c0042940c098004c048c090c048c0900084cdc0000a400420026052004002646600200201644a66604a002297ae0133026301230203027001330020023028001480084c8c8c94ccc08ccdc3a4000006264646464a66604e66e1d200030260011323232533302a3370e9002181480089919191919192999818299981819b8748008c0c4dd5181018170138a5013330304a0941288a999818299981819b8748008c0c4dd5181018170028a5013330304a0941288a9998180018a9998180010a99981800088058a5014a029405280a503370e664600200244a66606800229000099b8048008cc008008c0dc004c8c8cc004004008894ccc0d400452f5c0264666444646600200200644a6660760022006264666444660806e9ccc100dd4804998201ba900333040375000497ae0001375c60740026eb4c0ec004cc00c00cc0fc008c0f4004dd7181a0009bab303500133003003303900230370013756603e605a00e900219b8733300c3756603c605800c05004c900119b8933700012904056f10218051bab301d302b005301f001303000130280011630083027001302d0013025001163300a3758600a604860246048036466ebcc04cc094004c04cc094c05cc094020cc88c8cc00400400c894ccc0b000452809919299981598028010a511330040040013030002302e001375860086046602260460344a66604c66e24008c00cdd5980b1812000899baf301230240013012302401d14a060026eacc050c088c050c0880148ccc008005221004881001323253330253370e9001002899299981319b8748000c0940044c8c94ccc0a0cdc3a400460526ea8c060c09807c54ccc0a0cc010dd618029813180a181300e800899b87333006323300100100e22533302d00114bd6f7b630099191919299981719b8f4881000021003133032337606ea4008dd3000998030030019bab302f003375c605a0046062004605e00204404090008a5014a06eb8c0b0004c09000458c044c08cc044c08c0704c94ccc098cdc3a4000604a0022646464a666052a66605266e1d2002302a37546032604e04029404ccc0a5282504a22a66605266ebcc020c09c00800454ccc0a4cdd7980c9813801180c9813980c98138050998029bac300630273015302701e02514a0294052819ba548010cc0b0cdd2a4000660586028604c03e6605866605094530103d87a80004c0103d87980004bd7025eb80c0b0004c09000458cc024dd6180218119808981180d119baf30123024001301230243016302400722323300100100322533302b00114a026464a66605466e3c00801452889980200200098178011bae302d00123029302a302a302a302a302a302a302a302a0012223233223253330293370e9001000880109bad302e302700330270023253330273370e90010008a60103d87a8000132323300100100222533302d00114c103d87a8000132323232533302e3371e014004266e95200033032375000297ae0133006006003375a605e0066eb8c0b4008c0c4008c0bc004dd5981618128011812800a4000646600200200844a6660540022980103d87a8000132323232533302b3371e010004266e9520003302f374c00297ae0133006006003375660580066eb8c0a8008c0b8008c0b00048c09cc0a0c0a0004c07c05858c090004c07000458cc88cc00c0088cdd79806180f0008011bac3009301b3009301b01200a22323300100100322533302300114c0103d87a8000132325333022300500213374a90001981300125eb804cc010010004c09c008c094004dd598100009810000980f800980f000980e8011bac301b00130133001301300a2301a00130180013010001163001300f006230163017001149858c94ccc040cdc3a40000022a666026601c00c2930b0a99980819b874800800454ccc04cc03801852616153330103370e90020008a99980998070030a4c2c2c601c00a600200a464a66601e66e1d200000113232323253330163019002132498c94ccc050cdc3a4000002264646464a666036603c004264649319299980d19b87480000044c8c94ccc07cc0880084c92632533301d3370e9000000899192999811181280109924c60260022c604600260360042a66603a66e1d2002001132323232323253330263029002149858dd6981380098138011bad30250013025002375a604600260360042c60360022c604000260300062a66603466e1d20020011533301d301800314985858c060008c03000c58c070004c070008c068004c04801058c04800c58cdc3a400460266ea8c05c004c05c008c054004c03400858c0340048c94ccc038cdc3a400000226464a666026602c0042930b1bae3014001300c0021533300e3370e9001000899192999809980b0010a4c2c6eb8c050004c03000858c030004dd70009bae001375c0024600a6ea80048c00cdd5000ab9a5573aaae7955cfaba05742ae89",
+      "hash": "911722c1f502f1ccaf5a364e53916d5ca50edb24ade74caa7a5d653c"
+    },
+    {
+      "title": "unique_nft.unique_nft",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "parameters": [
+        {
+          "title": "token_name",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        },
+        {
+          "title": "utxo_ref",
+          "schema": {
+            "$ref": "#/definitions/aiken~1transaction~1OutputReference"
+          }
+        }
+      ],
+      "compiledCode": "5901980100003232323232323232322322225333008323232323232323232323253330133370e90001809004099191919299980d180e80109919299980c99b87001480045288a99980c99b870014800854ccc064cdc780100a8991980080080691299980f0008a5013232533301d3375e6044603600403029444cc010010004c088008c0800045280a50375a60340046eb8c06000458c06c004c8cc88c94ccc064cdc3a4004002200426eacc078c05c00cc05c008c8cc004004008894ccc06c004530103d87a8000132323232533301c3371e010004266e95200033020374c00297ae01330060060033756603a0066eb8c06c008c07c008c0740052f5bded8c0646600200200844a666034002297adef6c60132323232533301b3371e91100002100313301f337606ea4008dd3000998030030019bab301c003375c6034004603c00460380026eb8c064004c04402058dd5980b800980b800980b000980a800980a0011bac3012001300a00330100013010002300e0013006001149858dd7000918029baa001230033754002ae6955ceaab9e5573eae815d0aba21",
+      "hash": "75b4211ed6fc4ac6629cc83677461d05f78dc64df071af802ccd0efa"
+    }
+  ],
+  "definitions": {
+    "Bool": {
+      "title": "Bool",
+      "anyOf": [
+        {
+          "title": "False",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "True",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "Option$aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Optional",
+      "anyOf": [
+        {
+          "title": "Some",
+          "description": "An optional value.",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "None",
+          "description": "Nothing.",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "aiken/transaction/OutputReference": {
+      "title": "OutputReference",
+      "description": "An `OutputReference` is a unique reference to an output on-chain. The `output_index`\n corresponds to the position in the output list of the transaction (identified by its id)\n that produced that output",
+      "anyOf": [
+        {
+          "title": "OutputReference",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "transaction_id",
+              "$ref": "#/definitions/aiken~1transaction~1TransactionId"
+            },
+            {
+              "title": "output_index",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/TransactionId": {
+      "title": "TransactionId",
+      "description": "A unique transaction identifier, as the hash of a transaction body. Note that the transaction id\n isn't a direct hash of the `Transaction` as visible on-chain. Rather, they correspond to hash\n digests of transaction body as they are serialized on the network.",
+      "anyOf": [
+        {
+          "title": "TransactionId",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "hash",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Address": {
+      "title": "Address",
+      "description": "A Cardano `Address` typically holding one or two credential references.\n\n Note that legacy bootstrap addresses (a.k.a. 'Byron addresses') are\n completely excluded from Plutus contexts. Thus, from an on-chain\n perspective only exists addresses of type 00, 01, ..., 07 as detailed\n in [CIP-0019 :: Shelley Addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019/#shelley-addresses).",
+      "anyOf": [
+        {
+          "title": "Address",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "payment_credential",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            },
+            {
+              "title": "stake_credential",
+              "$ref": "#/definitions/Option$aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Credential": {
+      "title": "Credential",
+      "description": "A general structure for representing an on-chain `Credential`.\n\n Credentials are always one of two kinds: a direct public/private key\n pair, or a script (native or Plutus).",
+      "anyOf": [
+        {
+          "title": "VerificationKeyCredential",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        },
+        {
+          "title": "ScriptCredential",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Referenced",
+      "description": "Represent a type of object that can be represented either inline (by hash)\n or via a reference (i.e. a pointer to an on-chain location).\n\n This is mainly use for capturing pointers to a stake credential\n registration certificate in the case of so-called pointer addresses.",
+      "anyOf": [
+        {
+          "title": "Inline",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "Pointer",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "title": "slot_number",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "transaction_index",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "certificate_index",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "types/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "current_king",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Address"
+            },
+            {
+              "title": "competition_closed",
+              "$ref": "#/definitions/Bool"
+            }
+          ]
+        }
+      ]
+    },
+    "types/Redeemer": {
+      "title": "Redeemer",
+      "anyOf": [
+        {
+          "title": "OverthrowKing",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "MintKingNFT",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        },
+        {
+          "title": "CloseCompetition",
+          "dataType": "constructor",
+          "index": 2,
+          "fields": []
+        }
+      ]
+    }
+  }
+}
