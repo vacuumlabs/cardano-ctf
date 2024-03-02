@@ -153,6 +153,13 @@ errors during submissions.
 This is why we run the transactions on the Lucid emulator first. Only if they
 pass there we try to replicate it on the testnet as well.
 
+## Scoreboard
+
+Successful solutions are recorded on the testnet. There is a script called
+`scoreboard.ts` that displays the number of successful solutions in a succinct
+way. You can run it using the command
+`deno run --allow-net --allow-read scoreboard.ts`.
+
 ## Feedback
 
 [Join our Discord](https://discord.gg/5XVW2MUdWu). You can ask questions, share

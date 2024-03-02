@@ -1,3 +1,15 @@
+## Version 0.4.1 - [2024-03-02]
+
+### Added
+
+- We added the [scoreboard](./scoreboard.ts) script, useful for displaying the
+  number of people that solved the tasks.
+
+### Changed
+
+- Explicitly specified minAda for the solution recording UTxO creation
+  transaction. It should be more stable.
+
 ## Version 0.4 (Milestone 4) - [2024-02-20]
 
 ### Added

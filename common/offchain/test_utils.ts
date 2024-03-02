@@ -3,18 +3,9 @@ import {
   brightRed,
   brightYellow,
 } from "https://deno.land/std@0.206.0/fmt/colors.ts";
-import {
-  applyParamsToScript,
-  Data,
-  fromText,
-  Lucid,
-  Script,
-} from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 
 import { getCurrentTime, isEmulator } from "./utils.ts";
-import solutionRecordingBlueprint from "../solution_recording/plutus.json" assert {
-  type: "json",
-};
 
 export function passTest(s: string, l: Lucid) {
   if (isEmulator(l)) {
@@ -62,8 +53,8 @@ const SolutionRecordSchema = Data.Object({
   solver_address: Data.Bytes(),
 });
 
-type SolutionRecordDatum = Data.Static<typeof SolutionRecordSchema>;
-const SolutionRecordDatum =
+export type SolutionRecordDatum = Data.Static<typeof SolutionRecordSchema>;
+export const SolutionRecordDatum =
   SolutionRecordSchema as unknown as SolutionRecordDatum;
 
 function createSolutionRecordDatum(
@@ -79,35 +70,21 @@ function createSolutionRecordDatum(
   return Data.to(datum, SolutionRecordDatum);
 }
 
+export const SOLUTION_RECORD_ADDRESS =
+  "addr_test1wqxdcgqqexv4mqfnaj2lp77824hcgz4fgsrkdhzwy2a20fq5zsp5u";
+
 export async function submitSolutionRecord(lucid: Lucid, problemId: bigint) {
   if (isEmulator(lucid)) return;
-
   const ownAddress = await lucid.wallet.address();
-  const solutionRecord = solutionRecordingBlueprint.validators.find((v) =>
-    v.title == "solution_record.record"
-  );
-  if (!solutionRecord) {
-    throw new Error("Solution recording validator not found.");
-  }
-  const solutionRecordValidator: Script = {
-    type: "PlutusV2",
-    script: applyParamsToScript(solutionRecord.compiledCode, [
-      fromText("CTF2: Solution Recording"),
-    ]),
-  };
-  const solutionRecordAddress = lucid.utils.validatorToAddress(
-    solutionRecordValidator,
-  );
-
   const tx = await lucid
     .newTx()
-    .payToContract(solutionRecordAddress, {
+    .payToContract(SOLUTION_RECORD_ADDRESS, {
       inline: createSolutionRecordDatum(
         problemId,
         BigInt(getCurrentTime(lucid)),
         ownAddress,
       ),
-    }, {})
+    }, { lovelace: 2000000n })
     .complete();
 
   const signedTx = await tx.sign().complete();
