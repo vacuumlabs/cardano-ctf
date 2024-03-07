@@ -263,7 +263,8 @@ export async function test(
   const datum1 = Data.from(gameData.scriptUtxos[0].datum, SellNFTDatum);
   const datum2 = Data.from(gameData.scriptUtxos[1].datum, SellNFTDatum);
 
-  const spentFunds = endBalance - gameData.originalBalance;
+  const spentFunds = gameData.originalBalance - endBalance;
+
   if (spentFunds < datum1.price + datum2.price) {
     passTest(
       `TEST 3 PASSED - you spent less than the price of both NFTs`,
