@@ -54,9 +54,6 @@ export async function setup(lucid: Lucid): Promise<GameData> {
   // Compile and setup the validators
   const validators = readValidators(lucid);
 
-  const originalBalance = await getWalletBalanceLovelace(lucid);
-  console.log(`Your wallet's balance at the beginning is ${originalBalance}`);
-
   const owner = "1c8d5146716def9ac9aa4968a51e0175cea4e483cb328e48403f0df5";
 
   console.log("Setting up tipjar!");
@@ -81,6 +78,9 @@ export async function setup(lucid: Lucid): Promise<GameData> {
     await lucid.utxosAt(validators!.tipJarAddress),
     txHash,
   );
+
+  const originalBalance = await getWalletBalanceLovelace(lucid);
+  console.log(`Your wallet's balance after setup is ${originalBalance}`);
 
   console.log(`=== SETUP WAS SUCCESSFUL ===`);
 
@@ -160,10 +160,9 @@ export async function test(
   }
 
   // 2. Did not spend too much ADA
-  const spentAda = gameData.originalBalance -
-    await getWalletBalanceLovelace(lucid);
+  const spentAda = gameData.originalBalance - endBalance;
   if (spentAda < 100000000n) {
-    passTest(`TEST 1 PASSED - you spent just enough ADA!`, lucid);
+    passTest(`TEST 1 PASSED - you spent less than 100 ADA.`, lucid);
   } else {
     failTest(`TEST 1 FAILED - you spent too much ADA.`);
     passed = false;

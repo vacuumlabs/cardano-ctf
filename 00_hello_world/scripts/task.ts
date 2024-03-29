@@ -54,7 +54,6 @@ export async function lock(
 export async function setup(lucid: Lucid) {
   console.log(`=== SETUP IN PROGRESS ===`);
 
-  const originalBalance = await getWalletBalanceLovelace(lucid);
   const validator = readValidator(lucid);
 
   const _publicKeyHash = lucid.utils.getAddressDetails(
@@ -72,6 +71,8 @@ export async function setup(lucid: Lucid) {
   );
 
   const contractAddress = lucid.utils.validatorToAddress(validator);
+
+  const originalBalance = await getWalletBalanceLovelace(lucid);
 
   console.log(`=== SETUP WAS SUCCESSFUL ===`);
 

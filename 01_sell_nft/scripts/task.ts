@@ -88,8 +88,6 @@ function readValidators(
 
 export async function setup(lucid: Lucid) {
   console.log(`=== SETUP IN PROGRESS ===`);
-  const originalBalance = await getWalletBalanceLovelace(lucid);
-  console.log(`Your wallet's balance at the beginning is ${originalBalance}`);
 
   const tokenName1 = `${UNIQUE_ID} -- NFT1`;
   const token1Price = 50000000n; // 50 ADA
@@ -149,6 +147,9 @@ export async function setup(lucid: Lucid) {
     await lucid.utxosAt(validators!.sellingAddress),
     txHash,
   );
+
+  const originalBalance = await getWalletBalanceLovelace(lucid);
+  console.log(`Your wallet's balance after setup is ${originalBalance}`);
 
   console.log(`=== SETUP WAS SUCCESSFUL ===`);
 

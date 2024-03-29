@@ -153,6 +153,7 @@ export async function setup(lucid: Lucid) {
 
   const originalBalance = await getWalletBalanceLovelace(lucid);
   console.log(`Your wallet's balance after setup is ${originalBalance}`);
+
   console.log(`=== SETUP WAS SUCCESSFUL ===`);
 
   return {
@@ -179,11 +180,11 @@ export async function test(
   )[0];
 
   // Test 1 -- The wallet should have enough ADA to comfortably overthrow the current king
-  const currentBalance = BigInt(await getWalletBalanceLovelace(lucid));
+  const endBalance = BigInt(await getWalletBalanceLovelace(lucid));
   const lovelaceInKingUTxO = BigInt(kingUTxO.assets["lovelace"]);
 
   const kingDatum = Data.from(kingUTxO.datum!, KingDatum);
-  const enoughAdaLeft = currentBalance > 10n * lovelaceInKingUTxO;
+  const enoughAdaLeft = endBalance > 10n * lovelaceInKingUTxO;
   if (enoughAdaLeft) {
     passTest(`TEST 1 PASSED - Enough ADA left in wallet`, lucid);
   } else {
