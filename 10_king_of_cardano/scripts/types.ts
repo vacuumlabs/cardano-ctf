@@ -15,10 +15,13 @@ export const KingDatum = KingDatumSchema as unknown as KingDatum;
 
 export function createKingOfCardanoDatum(
   addressBech32: string,
-  competition_closed: boolean,
+  competitionClosed: boolean,
 ): string {
   const current_king = getAddressFromBech32(addressBech32);
-  return Data.to({ current_king, competition_closed }, KingDatum);
+  return Data.to(
+    { current_king, competition_closed: competitionClosed },
+    KingDatum,
+  );
 }
 
 const KingRedeemerSchema = Data.Enum([

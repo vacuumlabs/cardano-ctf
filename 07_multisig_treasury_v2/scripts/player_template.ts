@@ -2,6 +2,7 @@ import { Data, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
   filterUTXOsByTxHash,
+  FIXED_MIN_ADA,
   getFormattedTxDetails,
 } from "../../common/offchain/utils.ts";
 import {
@@ -56,7 +57,7 @@ export async function play(
         [ownAddress],
         lucid,
       ),
-    }, { [validationAsset]: BigInt(1) })
+    }, { [validationAsset]: BigInt(1), lovelace: FIXED_MIN_ADA })
     .addSigner(ownAddress)
     .complete();
 
@@ -91,7 +92,7 @@ export async function play(
         ),
         lucid,
       ),
-    }, { "lovelace": treasuryBalance })
+    }, { lovelace: treasuryBalance })
     .addSigner(ownAddress)
     .attachSpendingValidator(gameData.validators.multisigValidator)
     .attachSpendingValidator(gameData.validators.treasuryValidator)

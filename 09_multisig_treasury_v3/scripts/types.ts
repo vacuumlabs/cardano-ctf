@@ -4,7 +4,7 @@ import {
   AddressSchema,
   getAddressFromBech32,
 } from "../../common/offchain/types.ts";
-import { filter_undefined } from "../../common/offchain/utils.ts";
+import { filterUndefined } from "../../common/offchain/utils.ts";
 
 const TreasuryDatumSchema = Data.Object({
   value: Data.Integer(),
@@ -18,7 +18,7 @@ export const TreasuryDatum = TreasuryDatumSchema as unknown as TreasuryDatum;
 export function createTreasuryDatum(
   value: bigint,
   owners: string[],
-  multisig_hash: string,
+  multisigHash: string,
   lucid: Lucid,
 ): string {
   const verificationKeyHashes = owners.map((address) =>
@@ -26,8 +26,8 @@ export function createTreasuryDatum(
   );
   const datum: TreasuryDatum = {
     value,
-    multisig_hash,
-    owners: filter_undefined(verificationKeyHashes),
+    multisig_hash: multisigHash,
+    owners: filterUndefined(verificationKeyHashes),
   };
   return Data.to(datum, TreasuryDatum);
 }
@@ -52,10 +52,10 @@ type MultisigDatum = Data.Static<typeof MultisigDatumSchema>;
 export const MultisigDatum = MultisigDatumSchema as unknown as MultisigDatum;
 
 export function createMultisigDatum(
-  release_value: bigint,
+  releaseValue: bigint,
   beneficiaryBech32: string,
   signers: string[],
-  already_signed: string[],
+  alreadySigned: string[],
   lucid: Lucid,
 ): string {
   const beneficiary = getAddressFromBech32(beneficiaryBech32);
@@ -65,14 +65,14 @@ export function createMultisigDatum(
   const verificationKeyHashesSigners = signers.map((address) =>
     lucid.utils.getAddressDetails(address).paymentCredential?.hash
   );
-  const verificationKeyHashesSigned = already_signed.map((address) =>
+  const verificationKeyHashesSigned = alreadySigned.map((address) =>
     lucid.utils.getAddressDetails(address).paymentCredential?.hash
   );
   const datum: MultisigDatum = {
-    release_value,
+    release_value: releaseValue,
     beneficiary,
-    required_signers: filter_undefined(verificationKeyHashesSigners),
-    signed_users: filter_undefined(verificationKeyHashesSigned),
+    required_signers: filterUndefined(verificationKeyHashesSigners),
+    signed_users: filterUndefined(verificationKeyHashesSigned),
   };
   return Data.to(datum, MultisigDatum);
 }

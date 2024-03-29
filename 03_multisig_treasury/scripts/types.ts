@@ -4,7 +4,7 @@ import {
   AddressSchema,
   getAddressFromBech32,
 } from "../../common/offchain/types.ts";
-import { filter_undefined } from "../../common/offchain/utils.ts";
+import { filterUndefined } from "../../common/offchain/utils.ts";
 
 const TreasuryDatumSchema = Data.Object({
   value: Data.Integer(),
@@ -24,7 +24,7 @@ export function createTreasuryDatum(
   );
   const datum: TreasuryDatum = {
     value: value,
-    owners: filter_undefined(verificationKeyHashes),
+    owners: filterUndefined(verificationKeyHashes),
   };
   return Data.to(datum, TreasuryDatum);
 }
@@ -49,10 +49,10 @@ type MultisigDatum = Data.Static<typeof MultisigDatumSchema>;
 export const MultisigDatum = MultisigDatumSchema as unknown as MultisigDatum;
 
 export function createMultisigDatum(
-  release_value: bigint,
+  releaseValue: bigint,
   beneficiaryBech32: string,
   signers: string[],
-  already_signed: string[],
+  alreadySigned: string[],
   lucid: Lucid,
 ): string | undefined {
   const beneficiary = getAddressFromBech32(beneficiaryBech32);
@@ -62,14 +62,14 @@ export function createMultisigDatum(
   const verificationKeyHashesSigners = signers.map((address) =>
     lucid.utils.getAddressDetails(address).paymentCredential?.hash
   );
-  const verificationKeyHashesSigned = already_signed.map((address) =>
+  const verificationKeyHashesSigned = alreadySigned.map((address) =>
     lucid.utils.getAddressDetails(address).paymentCredential?.hash
   );
   const datum: MultisigDatum = {
-    release_value: release_value,
+    release_value: releaseValue,
     beneficiary: beneficiary,
-    required_signers: filter_undefined(verificationKeyHashesSigners),
-    signed_users: filter_undefined(verificationKeyHashesSigned),
+    required_signers: filterUndefined(verificationKeyHashesSigners),
+    signed_users: filterUndefined(verificationKeyHashesSigned),
   };
   return Data.to(datum, MultisigDatum);
 }

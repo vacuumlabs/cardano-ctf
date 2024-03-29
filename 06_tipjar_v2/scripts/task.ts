@@ -11,6 +11,7 @@ import {
   filterUTXOsByTxHash,
   getFormattedTxDetails,
   getWalletBalanceLovelace,
+  setupValidator,
 } from "../../common/offchain/utils.ts";
 import {
   failTest,
@@ -20,7 +21,7 @@ import {
   submitSolutionRecord,
 } from "../../common/offchain/test_utils.ts";
 import { createTipJarDatum, TipJarDatum, TipJarRedeemer } from "./types.ts";
-import blueprint from "../plutus.json" assert { type: "json" };
+import blueprint from "../plutus.json" with { type: "json" };
 
 export type Validators = {
   tipJar: SpendingValidator;
@@ -39,23 +40,11 @@ export type TestData = {
 };
 
 function readValidators(lucid: Lucid): Validators {
-  const tipJarBlueprint = blueprint.validators.find((v) =>
-    v.title === "tipjar.tipjar"
-  );
-
-  if (!tipJarBlueprint) {
-    throw new Error("TipJar validator not found");
-  }
-
-  const tipJar: Script = {
-    type: "PlutusV2",
-    script: tipJarBlueprint.compiledCode,
-  };
-  const tipJarAddress = lucid.utils.validatorToAddress(tipJar);
+  const tipJar = setupValidator(lucid, blueprint, "tipjar.tipjar");
 
   return {
-    tipJar,
-    tipJarAddress,
+    tipJar: tipJar.validator,
+    tipJarAddress: tipJar.address,
   };
 }
 

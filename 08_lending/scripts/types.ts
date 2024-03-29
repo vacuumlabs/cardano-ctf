@@ -31,14 +31,14 @@ export const LendingDatum = LendingDatumSchema as unknown as LendingDatum;
 export function createLendingDatum(
   borrowerBech32: string,
   lenderBech32: string | null,
-  borrowed_amount: bigint,
+  borrowedAmount: bigint,
   interest: bigint,
-  loan_duration: bigint,
-  loan_end: bigint | null,
-  collateral_policy: string,
-  collateral_name: string,
+  loanDuration: bigint,
+  loanEnd: bigint | null,
+  collateralPolicy: string,
+  collateralName: string,
   repaid: boolean,
-  unique_id: bigint,
+  uniqueId: bigint,
 ): string {
   const borrower = getAddressFromBech32(borrowerBech32);
   const lender = lenderBech32 != null
@@ -46,20 +46,20 @@ export function createLendingDatum(
     : null;
 
   const collateral: AssetClass = {
-    policy_id: collateral_policy,
-    asset_name: collateral_name,
+    policy_id: collateralPolicy,
+    asset_name: collateralName,
   };
 
   const datum: LendingDatum = {
     borrower,
     lender,
-    borrowed_amount,
+    borrowed_amount: borrowedAmount,
     interest,
-    loan_duration,
-    loan_end,
+    loan_duration: loanDuration,
+    loan_end: loanEnd,
     collateral,
     repaid,
-    unique_id,
+    unique_id: uniqueId,
   };
 
   return Data.to(datum, LendingDatum);

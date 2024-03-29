@@ -1,12 +1,10 @@
 import {
-  applyParamsToScript,
   Constr,
   Data,
   fromText,
   Lucid,
   MintingPolicy,
   PrivateKey,
-  Script,
   SpendingValidator,
   UTxO,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
@@ -19,6 +17,8 @@ import {
   privateKeyToPubKeyHash,
   pubKeyHashToAddress,
   resetWallet,
+  setupMintingPolicy,
+  setupValidator,
 } from "../../common/offchain/utils.ts";
 import {
   createKingOfCardanoDatum,
@@ -26,7 +26,7 @@ import {
   KingNFTRedeemer,
   KingRedeemer,
 } from "./types.ts";
-import blueprint from "../plutus.json" assert { type: "json" };
+import blueprint from "../plutus.json" with { type: "json" };
 import { getBech32FromAddress } from "../../common/offchain/types.ts";
 import {
   failTest,
@@ -68,72 +68,35 @@ function readValidators(
   adminPubKeyHash: string,
 ): Validators {
   const uniqueNFTAssetName = "VALID";
-  const uniqueNFT = blueprint.validators.find((v) =>
-    v.title === "unique_nft.unique_nft"
-  );
-  if (!uniqueNFT) {
-    throw new Error("MintNFT validator not found");
-  }
   const bootstrapUTxORefParameter = new Constr(0, [
     new Constr(0, [bootstrapUTxO.txHash]),
     BigInt(bootstrapUTxO.outputIndex),
   ]);
-  const parametrizedUniqueNFT = applyParamsToScript(uniqueNFT.compiledCode, [
-    fromText(uniqueNFTAssetName),
-    bootstrapUTxORefParameter,
-  ]);
-  const uniqueNFTPolicy: Script = {
-    type: "PlutusV2",
-    script: parametrizedUniqueNFT,
-  };
-  const uniquePolicyId = lucid.utils.mintingPolicyToId(uniqueNFTPolicy);
-
-  const kingOfCardano = blueprint.validators.find((v) =>
-    v.title == "king_of_cardano.king_of_cardano"
+  const uniqueNFT = setupMintingPolicy(
+    lucid,
+    blueprint,
+    "unique_nft.unique_nft",
+    [fromText(uniqueNFTAssetName), bootstrapUTxORefParameter],
   );
-  if (!kingOfCardano) {
-    throw new Error("King of Cardano validator not found.");
-  }
-  const parametrizedKingOfCardano = applyParamsToScript(
-    kingOfCardano.compiledCode,
-    [adminPubKeyHash, uniquePolicyId, fromText(uniqueNFTAssetName)],
+  const kingOfCardano = setupValidator(
+    lucid,
+    blueprint,
+    "king_of_cardano.king_of_cardano",
+    [adminPubKeyHash, uniqueNFT.policyId, fromText(uniqueNFTAssetName)],
   );
-
-  const kingOfCardanoValidator: Script = {
-    type: "PlutusV2",
-    script: parametrizedKingOfCardano,
-  };
-  const kingOfCardanoAddress = lucid.utils.validatorToAddress(
-    kingOfCardanoValidator,
-  );
-  const kingOfCardanoScriptHash = lucid.utils.validatorToScriptHash(
-    kingOfCardanoValidator,
-  );
-
-  const kingNFT = blueprint.validators.find(
-    (v) => v.title === "king_nft.king_nft",
-  );
-  if (!kingNFT) {
-    throw new Error("NFT mint validator not found");
-  }
-  const parametrizedKingNFT = applyParamsToScript(kingNFT.compiledCode, [
-    kingOfCardanoScriptHash,
-    uniquePolicyId,
+  const kingNFT = setupMintingPolicy(lucid, blueprint, "king_nft.king_nft", [
+    kingOfCardano.hash,
+    uniqueNFT.policyId,
     fromText(uniqueNFTAssetName),
   ]);
-  const kingNFTPolicy: Script = {
-    type: "PlutusV2",
-    script: parametrizedKingNFT,
-  };
-  const kingNFTPolicyId = lucid.utils.validatorToScriptHash(kingNFTPolicy);
 
   return {
-    uniqueNFTPolicy,
-    uniqueNFTAsset: `${uniquePolicyId}${fromText(uniqueNFTAssetName)}`,
-    kingNFTPolicy,
-    kingNFTPolicyId,
-    kingOfCardanoValidator,
-    kingOfCardanoAddress,
+    uniqueNFTPolicy: uniqueNFT.policy,
+    uniqueNFTAsset: `${uniqueNFT.policyId}${fromText(uniqueNFTAssetName)}`,
+    kingNFTPolicy: kingNFT.policy,
+    kingNFTPolicyId: kingNFT.policyId,
+    kingOfCardanoValidator: kingOfCardano.validator,
+    kingOfCardanoAddress: kingOfCardano.address,
   };
 }
 
@@ -168,7 +131,7 @@ export async function setup(lucid: Lucid) {
       validators.kingOfCardanoAddress,
       { inline: createKingOfCardanoDatum(initialKingAddress, false) },
       {
-        "lovelace": initialKingUTxOFunds,
+        lovelace: initialKingUTxOFunds,
         [validators.uniqueNFTAsset]: BigInt(1),
       },
     )

@@ -2,20 +2,33 @@ import {
   BLOCKFROST_API_KEY,
   BLOCKFROST_URL,
   CONFIRMS_WAIT,
-  emulator,
-  EMULATOR_PRIVATE_KEY,
-  lucid_emulator,
-  lucid_testnet,
   PRIVATE_KEY,
   USE_EMULATOR,
   USE_TESTNET,
 } from "./config.ts";
-import { C, Lucid, UTxO } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import {
+  emulator,
+  EMULATOR_PRIVATE_KEY,
+  lucidEmulator,
+  lucidTestnet,
+} from "./setup_lucid.ts";
+import {
+  applyParamsToScript,
+  C,
+  Data,
+  Lucid,
+  MintingPolicy,
+  Script,
+  SpendingValidator,
+  UTxO,
+} from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import { OurEmulator } from "./emulator_provider.ts";
 import {
   decode,
   encode,
 } from "https://deno.land/std@0.202.0/encoding/base64.ts";
+
+export const FIXED_MIN_ADA = 2000000n;
 
 async function writeStringWithoutNewline(s: string) {
   const text = new TextEncoder().encode(s);
@@ -45,8 +58,8 @@ export function awaitTxConfirms(
       }).then((res) => res.json());
       writeStringWithoutNewline(".");
       if (isConfirmed && !isConfirmed.error) {
-        const block_hash = isConfirmed.block;
-        const block = await fetch(`${BLOCKFROST_URL}/blocks/${block_hash}`, {
+        const blockHash = isConfirmed.block;
+        const block = await fetch(`${BLOCKFROST_URL}/blocks/${blockHash}`, {
           headers: { project_id: BLOCKFROST_API_KEY },
         }).then((res) => res.json());
         if (block.confirmations >= confirms) {
@@ -116,7 +129,7 @@ export function runTask<GameData, TestData>(
     if (USE_EMULATOR) {
       try {
         console.log("Running on emulator...");
-        testsPassedEmulator = await run(lucid_emulator);
+        testsPassedEmulator = await run(lucidEmulator);
       } catch (e) {
         console.log(e);
         console.log(
@@ -130,7 +143,7 @@ export function runTask<GameData, TestData>(
     if (testsPassedEmulator) {
       if (!USE_TESTNET) {
         console.log("Testnet is disabled, skipping...");
-      } else if (lucid_testnet == undefined) {
+      } else if (lucidTestnet == undefined) {
         console.log(
           "Testnet is not configured, finish your configuration according to the README",
         );
@@ -138,7 +151,7 @@ export function runTask<GameData, TestData>(
         console.log(
           "Running the task on testnet now, this will take some time...",
         );
-        await run(lucid_testnet);
+        await run(lucidTestnet);
       }
     } else {
       console.log(
@@ -150,8 +163,8 @@ export function runTask<GameData, TestData>(
   runInAllEnvironments(runInSingleEnvironment);
 }
 
-export function filter_undefined(input_list: (string | undefined)[]): string[] {
-  return input_list.filter((item): item is string => !!item);
+export function filterUndefined(inputList: (string | undefined)[]): string[] {
+  return inputList.filter((item): item is string => !!item);
 }
 
 export async function sleep(milliseconds: bigint): Promise<void> {
@@ -223,4 +236,67 @@ export async function fundWallet(
   );
 
   await awaitTxConfirms(lucid, submittedTx);
+}
+
+interface BlueprintJSON {
+  validators: {
+    title: string;
+    compiledCode: string;
+    hash: string;
+  }[];
+}
+
+type ValidatorData = {
+  validator: SpendingValidator;
+  address: string;
+  hash: string;
+};
+
+export function setupValidator(
+  lucid: Lucid,
+  blueprint: BlueprintJSON,
+  name: string,
+  parameters?: Data[],
+): ValidatorData {
+  const jsonData = blueprint.validators.find((v) => v.title == name);
+  if (!jsonData) {
+    throw new Error(`Validator with a name ${name} was not found.`);
+  }
+  const compiledCode = jsonData.compiledCode;
+  const validator: Script = {
+    type: "PlutusV2",
+    script: parameters === undefined
+      ? compiledCode
+      : applyParamsToScript(compiledCode, parameters),
+  };
+  const address = lucid.utils.validatorToAddress(validator);
+  const hash = lucid.utils.validatorToScriptHash(validator);
+
+  return { validator, address, hash };
+}
+
+type MintingPolicyData = {
+  policy: MintingPolicy;
+  policyId: string;
+};
+
+export function setupMintingPolicy(
+  lucid: Lucid,
+  blueprint: BlueprintJSON,
+  name: string,
+  parameters?: Data[],
+): MintingPolicyData {
+  const jsonData = blueprint.validators.find((v) => v.title == name);
+  if (!jsonData) {
+    throw new Error("Validation token policy not found.");
+  }
+  const compiledCode = jsonData.compiledCode;
+  const policy: MintingPolicy = {
+    type: "PlutusV2",
+    script: parameters === undefined
+      ? compiledCode
+      : applyParamsToScript(compiledCode, parameters),
+  };
+  const policyId = lucid.utils.validatorToScriptHash(policy);
+  return { policy, policyId };
 }

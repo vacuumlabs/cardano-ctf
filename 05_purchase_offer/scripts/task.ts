@@ -1,6 +1,4 @@
 import {
-  applyDoubleCborEncoding,
-  applyParamsToScript,
   Constr,
   Credential,
   Data,
@@ -15,7 +13,7 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import { shuffleArray } from "https://deno.land/x/shuffle_array@v1.0.7/mod.ts";
 
-import { UNIQUE_ID } from "../../common/offchain/config.ts";
+import { UNIQUE_ID } from "../../common/offchain/setup_lucid.ts";
 import {
   failTest,
   failTests,
@@ -30,12 +28,15 @@ import {
   filterUTXOsByTxHash,
   getFormattedTxDetails,
   getWalletBalanceLovelace,
+  setupMintingPolicy,
+  setupValidator,
 } from "../../common/offchain/utils.ts";
 import { createPurchaseOfferDatumSchema } from "./types.ts";
-import blueprint from "../plutus.json" assert { type: "json" };
+import blueprint from "../plutus.json" with { type: "json" };
 
 export type Validators = {
-  mintNFT: MintingPolicy;
+  nftPolicy: MintingPolicy;
+  nftPolicyId: string;
   purchaseOfferValidator: SpendingValidator;
 };
 export type AppliedValidators = {
@@ -60,81 +61,50 @@ type Prescription = {
 
 const offerredPrice = 10000000n; // 10 ADA
 
-function readValidators(): Validators {
-  const mintNFT = blueprint.validators.find(
-    (v) => v.title === "nft.unique_nft",
-  );
-  if (!mintNFT) throw new Error("MintNFT validator not found");
-
-  const offer = blueprint.validators.find((v) =>
-    v.title === "purchase_offer.purchase_offer"
-  );
-  if (!offer) throw new Error("PurchaseOffer validator not found");
-
-  return {
-    mintNFT: {
-      type: "PlutusV2",
-      script: mintNFT.compiledCode,
-    },
-    purchaseOfferValidator: {
-      type: "PlutusV2",
-      script: offer.compiledCode,
-    },
-  };
-}
-
-function applyParamsToNFT(
-  tokenName: string,
-  outputReference: OutRef,
-  validators: Validators,
+function readValidators(
   lucid: Lucid,
-): AppliedValidators {
+  outputReference: OutRef,
+  tokenName: string,
+): Validators {
+  const offer = setupValidator(
+    lucid,
+    blueprint,
+    "purchase_offer.purchase_offer",
+  );
+
   const outRef = new Constr(0, [
     new Constr(0, [outputReference.txHash]),
     BigInt(outputReference.outputIndex),
   ]);
-
-  const mintNFT = applyParamsToScript(validators.mintNFT.script, [
+  const mintNFT = setupMintingPolicy(lucid, blueprint, "nft.unique_nft", [
     fromText(tokenName),
     outRef,
   ]);
 
-  const policyId = lucid.utils.validatorToScriptHash({
-    type: "PlutusV2",
-    script: mintNFT,
-  });
-
   return {
-    mintNFT: { type: "PlutusV2", script: applyDoubleCborEncoding(mintNFT) },
-    policyId,
+    nftPolicy: mintNFT.policy,
+    nftPolicyId: mintNFT.policyId,
+    purchaseOfferValidator: offer.validator,
   };
 }
 
 export async function setup(lucid: Lucid): Promise<GameData> {
   console.log(`=== SETUP IN PROGRESS ===`);
-
-  // Compile and setup the validators
-  const validators = readValidators();
+  const originalBalance = await getWalletBalanceLovelace(lucid);
+  console.log(`Your wallet's balance at the beginning is ${originalBalance}`);
 
   const assetTokenName = `${UNIQUE_ID} -- NFT`;
   const utxosAtBeginning = await lucid.wallet.getUtxos();
   const nftOriginUtxo = utxosAtBeginning[0];
-  const originalBalance = await getWalletBalanceLovelace(lucid);
-  console.log(`Your wallet's balance at the beginning is ${originalBalance}`);
-
   const outputReference = {
     txHash: nftOriginUtxo.txHash,
     outputIndex: nftOriginUtxo.outputIndex,
   };
-  const parameterizedNFTContract = applyParamsToNFT(
-    assetTokenName,
-    outputReference,
-    validators,
-    lucid,
-  );
 
-  const assetPolicyId = parameterizedNFTContract!.policyId;
-  const asset = `${assetPolicyId}${fromText(assetTokenName)}`;
+  // Compile and setup the validators
+  const validators = readValidators(lucid, outputReference, assetTokenName);
+
+  const asset = `${validators.nftPolicyId}${fromText(assetTokenName)}`;
 
   const protocolStakingCredential: Credential = {
     type: "Key",
@@ -151,8 +121,9 @@ export async function setup(lucid: Lucid): Promise<GameData> {
     TOKEN2: fromText(assetTokenName.slice(2)),
   };
   const policyMapping = {
-    POLICY0: assetPolicyId,
-    POLICY1: (assetPolicyId[0] != "f" ? "f" : "d") + assetPolicyId.slice(1),
+    POLICY0: validators.nftPolicyId,
+    POLICY1: (validators.nftPolicyId[0] != "f" ? "f" : "d") +
+      validators.nftPolicyId.slice(1),
   };
 
   const decodeAssets = (prescription: Prescription): Prescription => ({
@@ -176,7 +147,7 @@ export async function setup(lucid: Lucid): Promise<GameData> {
   const tx = lucid
     .newTx()
     .collectFrom([nftOriginUtxo])
-    .attachMintingPolicy(parameterizedNFTContract!.mintNFT)
+    .attachMintingPolicy(validators.nftPolicy)
     .mintAssets(
       { [asset]: BigInt(1) },
       Data.void(),
@@ -240,7 +211,7 @@ export async function setup(lucid: Lucid): Promise<GameData> {
   return {
     scriptValidator: validators!.purchaseOfferValidator,
     scriptUtxos,
-    assetPolicyId,
+    assetPolicyId: validators.nftPolicyId,
     assetTokenName,
     balanceAfterSetup,
   };

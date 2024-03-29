@@ -3,19 +3,21 @@ import {
   Lucid,
   MintingPolicy,
   PrivateKey,
-  Script,
   SpendingValidator,
   UTxO,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
   filterUTXOsByTxHash,
+  FIXED_MIN_ADA,
   getFormattedTxDetails,
   getWalletBalanceLovelace,
   resetWallet,
+  setupMintingPolicy,
+  setupValidator,
 } from "../../common/offchain/utils.ts";
 import { createLendingDatum, LendingDatum, LendingRedeemer } from "./types.ts";
-import blueprint from "../plutus.json" assert { type: "json" };
+import blueprint from "../plutus.json" with { type: "json" };
 import {
   failTest,
   failTests,
@@ -44,52 +46,19 @@ export type GameData = {
 };
 export type TestData = void;
 
-export function addUTxOToWallet(
-  gameData: GameData,
-  walletAddress: string,
-  utxo: UTxO,
-) {
-  for (const wallet of gameData.wallets) {
-    if (wallet.address == walletAddress) {
-      wallet.lendingUTxOs.push(utxo);
-    }
-  }
-}
-
 function readValidators(lucid: Lucid): Validators {
-  const collateralToken = blueprint.validators.find((v) =>
-    v.title == "collateral_token.collateral_token"
+  const collateralToken = setupMintingPolicy(
+    lucid,
+    blueprint,
+    "collateral_token.collateral_token",
   );
-  if (!collateralToken) {
-    throw new Error("Validation token policy not found.");
-  }
-
-  const collateralPolicy: MintingPolicy = {
-    type: "PlutusV2",
-    script: collateralToken.compiledCode,
-  };
-
-  const collateralPolicyId = lucid.utils.validatorToScriptHash(
-    collateralPolicy,
-  );
-
-  const lending = blueprint.validators.find((v) =>
-    v.title == "lending.lending"
-  );
-  if (!lending) {
-    throw new Error("Lending validator not found.");
-  }
-  const lendingValidator: Script = {
-    type: "PlutusV2",
-    script: lending.compiledCode,
-  };
-  const lendingAddress = lucid.utils.validatorToAddress(lendingValidator);
+  const lending = setupValidator(lucid, blueprint, "lending.lending");
 
   return {
-    collateralPolicy,
-    collateralPolicyId,
-    lendingValidator,
-    lendingAddress,
+    collateralPolicy: collateralToken.policy,
+    collateralPolicyId: collateralToken.policyId,
+    lendingValidator: lending.validator,
+    lendingAddress: lending.address,
   };
 }
 
@@ -292,7 +261,7 @@ export async function setup(lucid: Lucid) {
             BigInt(uniqueId),
           ),
         },
-        { [wallet.collateralAsset]: 1n },
+        { [wallet.collateralAsset]: 1n, lovelace: FIXED_MIN_ADA },
       );
       uniqueId++;
     }

@@ -142,6 +142,12 @@ higher number. This makes it wait for more confirmations before it follows up
 with the next transaction, increasing the time and making the chance of such
 errors smaller.
 
+We have also encountered transactions in which Lucid wasn't able to determine
+the correct amount of ADA that needed to be placed into the UTxO, resulting in
+the transaction erroring out with `Not enough ADA leftover to cover minADA`,
+even if a sufficient amount of ADA was available. To address this issue, our
+transactions now deposit a fixed amount of at least 2 ADA into each UTxO.
+
 ### Long waiting time on the testnet
 
 From our experience, the time required for a transaction validation are ever

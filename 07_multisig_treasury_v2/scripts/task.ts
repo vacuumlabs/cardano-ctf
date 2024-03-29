@@ -1,8 +1,6 @@
 import {
-  applyParamsToScript,
   Lucid,
   MintingPolicy,
-  Script,
   SpendingValidator,
   UTxO,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
@@ -11,9 +9,11 @@ import {
   filterUTXOsByTxHash,
   getFormattedTxDetails,
   getWalletBalanceLovelace,
+  setupMintingPolicy,
+  setupValidator,
 } from "../../common/offchain/utils.ts";
 import { createTreasuryDatum } from "./types.ts";
-import blueprint from "../plutus.json" assert { type: "json" };
+import blueprint from "../plutus.json" with { type: "json" };
 import {
   failTest,
   failTests,
@@ -42,54 +42,24 @@ export type GameData = {
 export type TestData = void;
 
 function readValidators(lucid: Lucid): Validators {
-  const validationToken = blueprint.validators.find((v) =>
-    v.title == "validation_token.multisig_validation"
+  const validationToken = setupMintingPolicy(
+    lucid,
+    blueprint,
+    "validation_token.multisig_validation",
   );
-  if (!validationToken) {
-    throw new Error("Validation token policy not found.");
-  }
-
-  const validationPolicy: MintingPolicy = {
-    type: "PlutusV2",
-    script: validationToken.compiledCode,
-  };
-
-  const policyId = lucid.utils.validatorToScriptHash(validationPolicy);
-
-  const treasury = blueprint.validators.find((v) =>
-    v.title == "treasury.treasury"
-  );
-  if (!treasury) {
-    throw new Error("Treasury validator not found.");
-  }
-  const treasuryValidator: Script = {
-    type: "PlutusV2",
-    script: treasury.compiledCode,
-  };
-  const treasuryAddress = lucid.utils.validatorToAddress(treasuryValidator);
-
-  const multisig = blueprint.validators.find((v) =>
-    v.title == "multisig.multisig"
-  );
-  if (!multisig) {
-    throw new Error("Multisig validator not found.");
-  }
-  const multisigValidator: Script = {
-    type: "PlutusV2",
-    script: applyParamsToScript(multisig.compiledCode, [
-      policyId,
-      lucid.utils.validatorToScriptHash(treasuryValidator),
-    ]),
-  };
-  const multisigAddress = lucid.utils.validatorToAddress(multisigValidator);
+  const treasury = setupValidator(lucid, blueprint, "treasury.treasury");
+  const multisig = setupValidator(lucid, blueprint, "multisig.multisig", [
+    validationToken.policyId,
+    treasury.hash,
+  ]);
 
   return {
-    validationPolicy,
-    policyId,
-    treasuryValidator,
-    treasuryAddress,
-    multisigValidator,
-    multisigAddress,
+    validationPolicy: validationToken.policy,
+    policyId: validationToken.policyId,
+    treasuryValidator: treasury.validator,
+    treasuryAddress: treasury.address,
+    multisigValidator: multisig.validator,
+    multisigAddress: multisig.address,
   };
 }
 
@@ -115,7 +85,7 @@ export async function setup(lucid: Lucid) {
         lucid.utils.validatorToScriptHash(validators.multisigValidator),
         lucid,
       ),
-    }, { "lovelace": treasuryFunds })
+    }, { lovelace: treasuryFunds })
     .complete();
 
   const signedTrTx = await createTreasuryTx.sign().complete();

@@ -4,8 +4,8 @@ import {
   brightYellow,
 } from "https://deno.land/std@0.206.0/fmt/colors.ts";
 import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
-
-import { getCurrentTime, isEmulator } from "./utils.ts";
+import { lucidTestnet } from "./setup_lucid.ts";
+import { FIXED_MIN_ADA, getCurrentTime, isEmulator } from "./utils.ts";
 
 export function passTest(s: string, l: Lucid) {
   if (isEmulator(l)) {
@@ -28,12 +28,13 @@ export function passAllTests(s: string, l: Lucid) {
         "To fully finish this task, you have to finish it on testnet too.",
       ),
     );
-    // TODO: check if it is not already configured
-    console.log(
-      brightYellow(
-        "Please refer to the README to configure everything correctly.",
-      ),
-    );
+    if (lucidTestnet == undefined) {
+      console.log(
+        brightYellow(
+          "Please refer to the README to configure everything correctly.",
+        ),
+      );
+    }
   } else {
     console.log(brightGreen(s));
   }
@@ -47,7 +48,7 @@ export function failTests() {
   console.log("Some tests did not pass, don't stop trying!");
 }
 
-const SolutionRecordSchema = Data.Object({
+export const SolutionRecordSchema = Data.Object({
   problem_id: Data.Integer(),
   timestamp: Data.Integer(),
   solver_address: Data.Bytes(),
@@ -58,14 +59,14 @@ export const SolutionRecordDatum =
   SolutionRecordSchema as unknown as SolutionRecordDatum;
 
 function createSolutionRecordDatum(
-  problem_id: bigint,
+  problemId: bigint,
   timestamp: bigint,
-  solver_address: string,
+  solverAddress: string,
 ): string {
   const datum: SolutionRecordDatum = {
-    problem_id,
+    problem_id: problemId,
     timestamp,
-    solver_address: fromText(solver_address),
+    solver_address: fromText(solverAddress),
   };
   return Data.to(datum, SolutionRecordDatum);
 }
@@ -84,7 +85,7 @@ export async function submitSolutionRecord(lucid: Lucid, problemId: bigint) {
         BigInt(getCurrentTime(lucid)),
         ownAddress,
       ),
-    }, { lovelace: 2000000n })
+    }, { lovelace: FIXED_MIN_ADA })
     .complete();
 
   const signedTx = await tx.sign().complete();

@@ -1,6 +1,7 @@
 import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
+  FIXED_MIN_ADA,
   getFormattedTxDetails,
 } from "../../common/offchain/utils.ts";
 import { PurchaseOfferDatum, SellRedeemer } from "./types.ts";
@@ -48,7 +49,10 @@ export async function play(
   const tx = await lucid
     .newTx()
     .collectFrom([offerUtxo], redeemer)
-    .payToAddress(offerUtxoOwnerAddress, { [asset]: BigInt(1) })
+    .payToAddress(offerUtxoOwnerAddress, {
+      [asset]: BigInt(1),
+      lovelace: FIXED_MIN_ADA,
+    })
     .attachSpendingValidator(gameData.scriptValidator)
     .complete();
 

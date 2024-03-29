@@ -1,5 +1,5 @@
 import { Data, toText } from "https://deno.land/x/lucid@0.10.7/mod.ts";
-import { lucid_testnet } from "./common/offchain/config.ts";
+import { lucidTestnet } from "./common/offchain/setup_lucid.ts";
 
 import {
   SOLUTION_RECORD_ADDRESS,
@@ -91,15 +91,15 @@ function showTaskRecords(
   if (hidden > 0) console.log(`\t(... ${hidden} other records ...)`);
 }
 
-if (lucid_testnet == undefined) {
+if (lucidTestnet == undefined) {
   console.log(
     "Testnet is not setup correctly, refer to README before proceeding",
   );
   Deno.exit(1);
 }
 
-const ownAddress = await lucid_testnet.wallet.address();
-const allSolutionRecords = await lucid_testnet.utxosAt(SOLUTION_RECORD_ADDRESS);
+const ownAddress = await lucidTestnet.wallet.address();
+const allSolutionRecords = await lucidTestnet.utxosAt(SOLUTION_RECORD_ADDRESS);
 const parsedDatums = allSolutionRecords.map((utxo) =>
   Data.from(utxo.datum!, SolutionRecordDatum)
 );

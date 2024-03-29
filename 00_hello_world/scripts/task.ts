@@ -10,8 +10,9 @@ import {
   filterUTXOsByTxHash,
   getFormattedTxDetails,
   getWalletBalanceLovelace,
+  setupValidator,
 } from "../../common/offchain/utils.ts";
-import blueprint from "../plutus.json" assert { type: "json" };
+import blueprint from "../plutus.json" with { type: "json" };
 import {
   failTest,
   failTests,
@@ -28,19 +29,9 @@ export type GameData = {
 
 export type TestData = void;
 
-function readValidator(): SpendingValidator {
-  const validator = blueprint.validators.find(
-    (v) => v.title === "hello_world.hello_world",
-  );
-
-  if (validator?.compiledCode === undefined) {
-    throw new Error("Compiled code for validator was not found.");
-  }
-
-  return {
-    type: "PlutusV2",
-    script: validator?.compiledCode,
-  };
+function readValidator(lucid: Lucid): SpendingValidator {
+  const hello = setupValidator(lucid, blueprint, "hello_world.hello_world");
+  return hello.validator;
 }
 
 export async function lock(
@@ -64,7 +55,7 @@ export async function setup(lucid: Lucid) {
   console.log(`=== SETUP IN PROGRESS ===`);
 
   const originalBalance = await getWalletBalanceLovelace(lucid);
-  const validator = readValidator();
+  const validator = readValidator(lucid);
 
   const _publicKeyHash = lucid.utils.getAddressDetails(
     await lucid.wallet.address(),

@@ -1,7 +1,5 @@
 import {
-  applyParamsToScript,
   Lucid,
-  Script,
   SpendingValidator,
   UTxO,
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
@@ -9,11 +7,13 @@ import {
   awaitTxConfirms,
   decodeBase64,
   filterUTXOsByTxHash,
+  FIXED_MIN_ADA,
   getFormattedTxDetails,
   getWalletBalanceLovelace,
+  setupValidator,
 } from "../../common/offchain/utils.ts";
 import { createMultisigDatum, createTreasuryDatum } from "./types.ts";
-import blueprint from "../plutus.json" assert { type: "json" };
+import blueprint from "../plutus.json" with { type: "json" };
 import {
   failTest,
   failTests,
@@ -42,35 +42,16 @@ export type GameData = {
 export type TestData = void;
 
 function readValidators(lucid: Lucid): Validators {
-  const multisig = blueprint.validators.find((v) =>
-    v.title == "multisig.multisig"
-  );
-  if (!multisig) {
-    throw new Error("Multisig validator not found.");
-  }
-  const multisigValidator: Script = {
-    type: "PlutusV2",
-    script: multisig.compiledCode,
-  };
-  const multisigAddress = lucid.utils.validatorToAddress(multisigValidator);
-
-  const treasury = blueprint.validators.find((v) =>
-    v.title == "treasury.treasury"
-  );
-  if (!treasury) {
-    throw new Error("Treasury validator not found.");
-  }
-  const treasuryValidator: Script = {
-    type: "PlutusV2",
-    script: applyParamsToScript(treasury.compiledCode, [multisig.hash]),
-  };
-  const treasuryAddress = lucid.utils.validatorToAddress(treasuryValidator);
+  const multisig = setupValidator(lucid, blueprint, "multisig.multisig");
+  const treasury = setupValidator(lucid, blueprint, "treasury.treasury", [
+    multisig.hash,
+  ]);
 
   return {
-    treasuryValidator: treasuryValidator,
-    treasuryAddress: treasuryAddress,
-    multisigValidator: multisigValidator,
-    multisigAddress: multisigAddress,
+    treasuryValidator: treasury.validator,
+    treasuryAddress: treasury.address,
+    multisigValidator: multisig.validator,
+    multisigAddress: multisig.address,
   };
 }
 
@@ -92,7 +73,7 @@ export async function setup(lucid: Lucid) {
     .newTx()
     .payToContract(validators.treasuryAddress, {
       inline: createTreasuryDatum(treasuryFunds, owners, lucid),
-    }, { "lovelace": treasuryFunds })
+    }, { lovelace: treasuryFunds })
     .complete();
 
   const signedTrTx = await createTreasuryTx.sign().complete();
@@ -118,7 +99,7 @@ export async function setup(lucid: Lucid) {
         [],
         lucid,
       ),
-    }, {})
+    }, { lovelace: FIXED_MIN_ADA })
     .complete();
 
   const signedMSTx = await createMultisigTx.sign().complete();
@@ -185,13 +166,13 @@ export async function test(
   if (passed) {
     await submitSolutionRecord(lucid, 3n);
 
-    const encoded_blog_url =
+    const encodedBlogURL =
       "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tdnVsbmVyYWJpbGl0aWVzLTMtdHJ1c3Qtbm8tdXR4by1iMjUyNjUwYWMyYjk=";
 
     passAllTests(
       "\nCongratulations on the successful completion of the Level 03: Multisig Treasury\n" +
         `You can read more about the underlying vulnerability in this blog post: ${
-          decodeBase64(encoded_blog_url)
+          decodeBase64(encodedBlogURL)
         }` + "\nGood luck with the next level.",
       lucid,
     );

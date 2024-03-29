@@ -3,6 +3,7 @@ import { createLendingDatum, LendingDatum, LendingRedeemer } from "./types.ts";
 import {
   awaitTxConfirms,
   filterUTXOsByTxHash,
+  FIXED_MIN_ADA,
   getCurrentTime,
   getFormattedTxDetails,
   minute,
@@ -65,7 +66,7 @@ export async function play(
         false,
         lendDatum.unique_id,
       ),
-    }, { [borrowerWallet.collateralAsset]: 1n })
+    }, { [borrowerWallet.collateralAsset]: 1n, lovelace: FIXED_MIN_ADA })
     .payToAddress(borrowerWallet.address, {
       lovelace: lendDatum.borrowed_amount,
     })

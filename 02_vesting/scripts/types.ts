@@ -10,7 +10,7 @@ export const VestingDatum = VestingSchema as unknown as VestingDatum;
 
 export function createVestingDatum(
   lucid: Lucid,
-  lock_until: bigint,
+  lockUntil: bigint,
   beneficiary: string,
 ): string | undefined {
   let beneficiaryHash = lucid.utils.getAddressDetails(beneficiary)
@@ -19,7 +19,7 @@ export function createVestingDatum(
     beneficiaryHash = "";
   }
   const datum: VestingDatum = {
-    lock_until,
+    lock_until: lockUntil,
     beneficiary: beneficiaryHash,
   };
   return Data.to(datum, VestingDatum);

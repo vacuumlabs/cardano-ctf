@@ -1,3 +1,20 @@
+## Version 0.4.2 - [2024-03-29]
+
+### Added
+
+- A simple `scripts/run_all.sh` script that runs all the tasks. Useful for
+  testing.
+
+### Changed
+
+- Explicitly specified minAda for each created UTxO. It should make the code
+  even more stable.
+- Simplifying of the `config_temp.ts` file and moving non-variable parts into
+  the `setup_lucid.ts` file. The change should be backwards compatible.
+- Adding utility functions for reading validators and minting policies to not
+  repeat ourselves.
+- Making other small, non-breaking refactor changes.
+
 ## Version 0.4.1 - [2024-03-02]
 
 ### Added
