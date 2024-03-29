@@ -9,9 +9,9 @@
 
 - Explicitly specified minAda for each created UTxO. It should make the code
   even more stable.
-- Fixed and unified balance computation. A few balance related tests were
-  passing even when they shouldn't, resulting in false positives. Please rerun
-  tests to find out whether you solved the task or not yet.
+- Fixed a test in the [01_sell_nft](./01_sell_nft/) task which was not working
+  properly. Please rerun the tests to find out whether you solved the task
+  properly or not yet. Unified balance computation in other tasks as well.
 
 ### Changed
 
