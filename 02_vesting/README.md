@@ -17,10 +17,11 @@ There is a single validator in `vesting.ak`.
 Note the additional `?` after certain logical predicates in the code. These
 indicators assist in pinpointing where the validator fails. You can check the
 documentation
-[here](https://aiken-lang.org/language-tour/troubleshooting#-operator). When
-building the validator with the `aikend build --keep-traces` command and
-encountering a failure during its execution, the stack trace of failed
-predicates will be displayed.
+[here](https://aiken-lang.org/language-tour/troubleshooting#-operator). To
+display the stack trace of failed predicates, the validator needs to be compiled
+with a corresponding flag which may depend on your Aiken version. The
+`--keep-traces` in older versions or `-t verbose` in newer ones. Check the
+`aiken build --help` for more information.
 
 ## Off-chain code
 

@@ -17,6 +17,9 @@ validator {
         ctx.transaction.outputs,
         fn(output) {
           // While debugging you can use this approach. Don't forget to import cbor library.
+          // To display the traces validator needs to be compiled with an appropriate flag.
+          // Check aiken build --help for more information.
+          //
           // trace cbor.diagnostic(output.address)
           // trace cbor.diagnostic(datum.seller)
           // trace cbor.diagnostic(datum)

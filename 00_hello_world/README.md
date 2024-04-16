@@ -55,8 +55,8 @@ require additional info contained within a `TestData` structure. You will be
 specifically instructed on how to modify it if needed. It is not needed for this
 task.
 
-To start, you can compile the validators by running `aiken build --keep-traces`
-in the root of the task. Then you can run the sample code by running
+To start, you can compile the validators by running `aiken build` in the root of
+the task. Then you can run the sample code by running
 `deno run --allow-net --allow-read ./scripts/run.ts`. Run is our wrapper that
 calls the function `play` from `player.ts` (if you did not copy
 `player_template.ts`, it will not work).
