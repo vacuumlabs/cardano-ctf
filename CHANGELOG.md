@@ -1,3 +1,14 @@
+## Version 1.0.0 - [2024-05-20]
+
+### Added
+
+- Project closeout report and link to the closeout video on Youtube.
+
+### Changed
+
+- The messages you get when you solve a task successfully changed in a few
+  levels. They now refer to new blogs that have been published in the meantime.
+
 ## Version 0.5.0 - [2024-03-29]
 
 ### Added
