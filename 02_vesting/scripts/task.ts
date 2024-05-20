@@ -5,6 +5,7 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
+  decodeBase64,
   filterUTXOsByTxHash,
   getCurrentTime,
   getFormattedTxDetails,
@@ -123,10 +124,17 @@ export async function test(
   if (passed) {
     await submitSolutionRecord(lucid, 2n);
 
+    const encodedBlogURL =
+      "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tdnVsbmVyYWJpbGl0aWVzLXRpbWUtaGFuZGxpbmctM2IwOTI1ZGY3ZmMy";
+
     passAllTests(
-      "\nCongratulations on the successful completion of the Level 02: Vesting\nGood luck with the next level.",
+      "\nCongratulations on the successful completion of the Level 02: Vesting\n" +
+        `You can read more about the underlying vulnerability in this blog post: ${
+          decodeBase64(encodedBlogURL)
+        }` + "\nGood luck with the next level.",
       lucid,
     );
+
     return true;
   } else {
     failTests();

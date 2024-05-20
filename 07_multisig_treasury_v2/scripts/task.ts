@@ -6,6 +6,7 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
+  decodeBase64,
   filterUTXOsByTxHash,
   getFormattedTxDetails,
   getWalletBalanceLovelace,
@@ -149,12 +150,17 @@ export async function test(
   if (passed) {
     await submitSolutionRecord(lucid, 7n);
 
+    const encodedBlogURL =
+      "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tdnVsbmVyYWJpbGl0aWVzLTYtdG9rZW4tc2VjdXJpdHktaWktZjIzMTliMTQ3ZWU2";
+
     passAllTests(
       "\nCongratulations on the successful completion of the Level 07: Multisig Treasury v2\n" +
-        "A blog post describing this vulnerability is not yet out there. However, you can expect it to be published in our Medium from March to June.\n" +
-        "Good luck with the next level.",
+        `You can read more about the underlying vulnerability in this blog post: ${
+          decodeBase64(encodedBlogURL)
+        }` + "\nGood luck with the next level.",
       lucid,
     );
+
     return true;
   } else {
     failTests();

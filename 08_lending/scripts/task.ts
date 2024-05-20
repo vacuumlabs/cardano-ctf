@@ -8,6 +8,7 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
+  decodeBase64,
   filterUTXOsByTxHash,
   FIXED_MIN_ADA,
   getFormattedTxDetails,
@@ -319,12 +320,18 @@ export async function test(
 
   if (passed) {
     await submitSolutionRecord(lucid, 8n);
+
+    const encodedBlogURL =
+      "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tY3RmLWhpbnRzLWFuZC1zb2x1dGlvbnMtZTM5OTFjZTZhOTQ0";
+
     passAllTests(
       "\nCongratulations on the successful completion of the Level 08: Lending\n" +
-        "A blog post describing this vulnerability is not yet out there. However, you can expect it to be published in our Medium from March to June.\n" +
-        "Good luck with the next level.",
+        `You can compare your solution with ours by reading this blog post: ${
+          decodeBase64(encodedBlogURL)
+        }` + "\nGood luck with the next level.",
       lucid,
     );
+
     return true;
   } else {
     failTests();

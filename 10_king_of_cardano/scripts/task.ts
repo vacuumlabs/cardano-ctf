@@ -10,6 +10,7 @@ import {
 } from "https://deno.land/x/lucid@0.10.7/mod.ts";
 import {
   awaitTxConfirms,
+  decodeBase64,
   filterUTXOsByTxHash,
   fundWallet,
   getFormattedTxDetails,
@@ -330,12 +331,18 @@ export async function test(
   if (passed) {
     await submitSolutionRecord(lucid, 10n);
 
+    const encodedBlogURL =
+      "aHR0cHM6Ly9tZWRpdW0uY29tL0B2YWN1dW1sYWJzX2F1ZGl0aW5nL2NhcmRhbm8tY3RmLWhpbnRzLWFuZC1zb2x1dGlvbnMtZTM5OTFjZTZhOTQ0";
+
     passAllTests(
-      "\nCongratulations on the successful completion of the Level 10: King of Cardano!\n" +
-        "A blog post describing this tricky vulnerability is not yet out there. However, you can expect it to be published in our Medium from March to June.\n" +
-        "Please, let us know your thoughts on Discord or via email. We would love to know how you liked it!",
+      "\nCongratulations on the successful completion of the Level 10: King of Cardano\n" +
+        `You can compare your solution with ours by reading this blog post: ${
+          decodeBase64(encodedBlogURL)
+        }` +
+        "\nPlease, let us know your thoughts on Discord or via email. We would love to know how you liked it!",
       lucid,
     );
+
     return true;
   } else {
     failTests();
