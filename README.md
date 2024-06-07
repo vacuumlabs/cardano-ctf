@@ -19,8 +19,8 @@ write more secure smart contracts.
   <a href="https://medium.com/@vacuumlabs_auditing">
     <img alt="Medium" src="https://img.shields.io/badge/Read%20our%20blogs-on%20Medium-blue?logo=medium">
   </a>
-  <a href="https://twitter.com/vacuum_crypto">
-    <img alt="Twitter" src="https://img.shields.io/badge/Follow-@vacuum_crypto-blue?logo=x">
+  <a href="https://twitter.com/vacuumlabs">
+    <img alt="Twitter" src="https://img.shields.io/badge/Follow-@vacuumlabs-blue?logo=x">
   </a>
 </p>
 
