@@ -10,7 +10,7 @@ import {
   Script,
   SpendingValidator,
   UTxO,
-} from "https://deno.land/x/lucid@0.10.7/mod.ts";
+} from "https://deno.land/x/lucid@0.10.11/mod.ts";
 import { shuffleArray } from "https://deno.land/x/shuffle_array@v1.0.7/mod.ts";
 
 import { UNIQUE_ID } from "../../common/offchain/setup_lucid.ts";

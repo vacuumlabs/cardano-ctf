@@ -1,4 +1,4 @@
-import { Data, fromText } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { Data, fromText } from "https://deno.land/x/lucid@0.10.11/mod.ts";
 
 const TipJarDatumSchema = Data.Object({
   owner: Data.Bytes(),

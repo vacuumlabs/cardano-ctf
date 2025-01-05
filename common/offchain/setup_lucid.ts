@@ -4,7 +4,7 @@ import {
   Lucid,
   PROTOCOL_PARAMETERS_DEFAULT,
   SLOT_CONFIG_NETWORK,
-} from "https://deno.land/x/lucid@0.10.7/mod.ts";
+} from "https://deno.land/x/lucid@0.10.11/mod.ts";
 import { BLOCKFROST_API_KEY, BLOCKFROST_URL, PRIVATE_KEY } from "./config.ts";
 import { OurEmulator } from "./emulator_provider.ts";
 

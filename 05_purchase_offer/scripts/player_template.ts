@@ -1,4 +1,4 @@
-import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.11/mod.ts";
 import {
   awaitTxConfirms,
   FIXED_MIN_ADA,

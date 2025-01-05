@@ -5,7 +5,7 @@ import {
   getAddressDetails,
   Lucid,
   networkToId,
-} from "https://deno.land/x/lucid@0.10.7/mod.ts";
+} from "https://deno.land/x/lucid@0.10.11/mod.ts";
 
 export const CredentialSchema = Data.Enum([
   Data.Object({ VerificationKeyCredential: Data.Tuple([Data.Bytes()]) }),

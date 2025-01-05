@@ -48,6 +48,6 @@ For instance, the timestamp at the time of the vesting creation could be
 Transactions in this level are somewhat more intricate, involving the setting of
 multiple additional parameters to build the transactions. To understand the
 workings of these options and explore other configurable parameters, refer to
-the [documentation](https://deno.land/x/lucid@0.10.7/mod.ts?s=Tx). While this
+the [documentation](https://deno.land/x/lucid@0.10.11/mod.ts?s=Tx). While this
 level provides all the necessary information, understanding the full extent of
 your options can prove valuable in later levels.

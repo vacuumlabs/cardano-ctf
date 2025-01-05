@@ -3,7 +3,7 @@ import {
   MintingPolicy,
   SpendingValidator,
   UTxO,
-} from "https://deno.land/x/lucid@0.10.7/mod.ts";
+} from "https://deno.land/x/lucid@0.10.11/mod.ts";
 import {
   awaitTxConfirms,
   decodeBase64,
