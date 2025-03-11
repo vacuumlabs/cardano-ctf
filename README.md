@@ -56,7 +56,7 @@ Each task has its own folder. It consists of three main parts:
 
 - The validators written in [Aiken](https://aiken-lang.org/). They are located
   in the `validators` folder. You can compile them by running `aiken build` in
-  the root directory of the task.
+  the root directory of the task. Make sure that you use (old) Aiken version `v1.0.26-alpha`.
 - The off-chain code. We use the [Lucid](https://github.com/spacebudz/lucid)
   library and the [Blockfrost](https://blockfrost.io/) API to interact with the
   Preview testnet. The off-chain scripts contain:
@@ -158,6 +158,10 @@ errors during submissions.
 
 This is why we run the transactions on the Lucid emulator first. Only if they
 pass there we try to replicate it on the testnet as well.
+
+### Aiken compilation issues
+
+We use old Aiken version `v1.0.26-alpha` and `aiken-stdlib` version `1.6.0` (you can see this in `aiken.toml` files). As Aiken syntax changed and newer Aiken versions are [unable](https://github.com/aiken-lang/stdlib/blob/main/README.md#compatibility) to compile this, you need to downgrade Aiken.
 
 ## Scoreboard
 
