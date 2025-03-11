@@ -21,7 +21,7 @@ import {
   Script,
   SpendingValidator,
   UTxO,
-} from "https://deno.land/x/lucid@0.10.7/mod.ts";
+} from "https://deno.land/x/lucid@0.10.11/mod.ts";
 import { OurEmulator } from "./emulator_provider.ts";
 import {
   decode,

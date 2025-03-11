@@ -1,4 +1,4 @@
-import { Data, toText } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { Data, toText } from "https://deno.land/x/lucid@0.10.11/mod.ts";
 import { lucidTestnet } from "./common/offchain/setup_lucid.ts";
 
 import {

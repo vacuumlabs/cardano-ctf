@@ -3,7 +3,7 @@ import {
   brightRed,
   brightYellow,
 } from "https://deno.land/std@0.206.0/fmt/colors.ts";
-import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.7/mod.ts";
+import { Data, fromText, Lucid } from "https://deno.land/x/lucid@0.10.11/mod.ts";
 import { lucidTestnet } from "./setup_lucid.ts";
 import { FIXED_MIN_ADA, getCurrentTime, isEmulator } from "./utils.ts";
 
